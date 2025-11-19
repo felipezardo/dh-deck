@@ -14,7 +14,7 @@ const classDomains = {
     'BloodHunter': ['Blood', 'Lâmina']
 };
 
-// Textos do PDF
+// Textos do PDF (Atualizados conforme seu envio)
 const classDescriptions = {
     'Bardo': `
         <div class="class-stats-grid">
@@ -218,12 +218,16 @@ const classDescriptions = {
             <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">6</span></div>
         </div>
         <div class="ability-block">
-            <div class="ability-title">Habilidade de Esperança: Sacrifício</div>
-            <p>Gaste vida para ganhar Esperança ou vice-versa. (Texto do suplemento não disponível no livro básico).</p>
+            <div class="ability-title">Habilidade de Esperança: Maldição de Sangue</div>
+            <p>Gaste 3 de Esperança para marcar uma criatura dentro do alcance Distante ou em uma visão da sua Psicometria Sombria. Até que você termine um descanso, sofra dano Severo, ou use esta característica novamente, você tem vantagem em todas as rolagens de ação contra o alvo.</p>
         </div>
         <div class="ability-block">
-            <div class="ability-title">Habilidade de Classe: Rito do Sangue</div>
-            <p>Imbua sua arma com seu próprio sangue para causar dano elemental extra ao custo de sua vitalidade. (Texto do suplemento não disponível no livro básico).</p>
+            <div class="ability-title">Habilidade de Classe: Rito Carmesim</div>
+            <p>Você pode encantar seus golpes com poder sanguinário ao custo de sua vitalidade. Marque 1 PV para encantar uma de suas armas ativas. Até que você termine seu próximo descanso, essa arma causa dano físico ou mágico (escolha quando usar esta característica) e um1d6 de dano extra quando você acerta com ela. Este dano extra aumenta para2d6 no nível 5 e 3d6 no nível 8.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Classe: Psicometria Sombria</div>
+            <p>Enquanto inspeciona uma criatura, um local ou um objeto em alcance Muito Próximo, faça um Teste de Conjuração (12). Em um sucesso, marque 1 PF para ter uma visão da violência mais recente envolvendo o alvo, e até que você termine um descanso, você tem vantagem em qualquer rolagem de ação para relembrar conhecimento sobre coisas na visão.</p>
         </div>
     `
 };
@@ -235,31 +239,34 @@ const STORAGE_KEY = 'daggerheart_manager_v7';
 let characters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let activeCharId = null;
 
+// Referências DOM
 const elTabs = document.getElementById('char-tabs');
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
+// Dropdown personalizado:
+const elDropdownContainer = document.getElementById('subclass-dropdown'); // a div wrapper
+const elDropdownDisplay = document.getElementById('subclass-display');   // o texto que aparece
+const elDropdownOptions = document.getElementById('subclass-options');   // a lista oculta
+
 const elAncestry = document.getElementById('char-ancestry');
 const elCommunity = document.getElementById('char-community');
 const elDeckSection = document.getElementById('deckbuilder-section');
 const elDescription = document.getElementById('class-description-box');
 
-// Elementos do Dropdown Personalizado
-const dropdownContainer = document.getElementById('subclass-dropdown');
-const dropdownDisplay = document.getElementById('subclass-display');
-const dropdownOptions = document.getElementById('subclass-options');
-
 // ==========================================
 // 3. INICIALIZAÇÃO
 // ==========================================
 function init() {
+    // Verificação de segurança
     if (typeof fullData === 'undefined') {
-        alert("ERRO: O arquivo 'data.js' não foi carregado.");
+        alert("ERRO: 'data.js' não encontrado. Verifique se ele está na mesma pasta e carregado antes do app.js.");
         return;
     }
 
     loadSelectOptions();
     renderTabs();
     
+    // Tenta carregar o primeiro personagem ou cria um novo se estiver vazio
     if (characters.length > 0) {
         selectCharacter(characters[0].id);
     } else {
@@ -278,7 +285,7 @@ function loadSelectOptions() {
 
     // Ancestralidades
     elAncestry.innerHTML = '<option value="">Selecione...</option>';
-    if(fullData.Ancestralidades) {
+    if (fullData.Ancestralidades) {
         fullData.Ancestralidades.forEach(a => {
             elAncestry.innerHTML += `<option value="${a.nome}">${a.nome}</option>`;
         });
@@ -286,7 +293,7 @@ function loadSelectOptions() {
 
     // Comunidades
     elCommunity.innerHTML = '<option value="">Selecione...</option>';
-    if(fullData.Comunidades) {
+    if (fullData.Comunidades) {
         fullData.Comunidades.forEach(c => {
             elCommunity.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
         });
@@ -301,7 +308,7 @@ function createNewCharacter() {
         id: Date.now(),
         name: '',
         class: '',
-        subclass: [], // Array de subclasses
+        subclass: [], // Array vazio para múltiplas subclasses
         ancestry: '',
         community: '',
         deck: [],
@@ -317,23 +324,30 @@ function selectCharacter(id) {
     const char = characters.find(c => c.id === id);
     if (!char) return;
 
-    elName.value = char.name;
-    elClass.value = char.class;
-    elAncestry.value = char.ancestry;
-    elCommunity.value = char.community;
+    // Preencher Campos Básicos
+    elName.value = char.name || '';
+    elClass.value = char.class || '';
+    elAncestry.value = char.ancestry || '';
+    elCommunity.value = char.community || '';
 
-    // Garante que subclass seja um array
+    // Garante que subclass seja um array (retrocompatibilidade)
     let selectedSubclasses = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
-    
+
+    // Reconstrói a UI de Subclasses e marca os itens salvos
     setupSubclassDropdown(char.class, selectedSubclasses);
+    
+    // Atualiza o resto da tela
     updateClassDescription(char.class);
     renderOriginCards(char);
-    
     renderTabs();
     renderDeck();
     
-    if (char.class) elDeckSection.classList.remove('hidden');
-    else elDeckSection.classList.add('hidden');
+    // Mostrar/Esconder Deckbuilder
+    if (char.class) {
+        elDeckSection.classList.remove('hidden');
+    } else {
+        elDeckSection.classList.add('hidden');
+    }
 }
 
 function updateClassDescription(className) {
@@ -347,85 +361,108 @@ function updateClassDescription(className) {
 }
 
 // ==========================================
-// DROPDOWN CUSTOMIZADO (LÓGICA)
+// 4.1 LÓGICA DO DROPDOWN DE SUBCLASSES
 // ==========================================
 
 function setupSubclassDropdown(className, selectedValues = []) {
-    dropdownOptions.innerHTML = ''; // Limpa opções
+    // Limpa as opções antigas
+    elDropdownOptions.innerHTML = ''; 
 
+    // Se não tem classe selecionada, reseta e sai
     if (!className) {
-        dropdownDisplay.innerText = "Primeiro a Classe...";
+        elDropdownDisplay.innerText = "Primeiro a Classe...";
+        // Desabilitar visualmente se quiser (opcional)
         return;
     }
 
+    // Filtra subclasses disponíveis no data.js para a classe escolhida
     if (fullData['Sub-Classes']) {
         const subs = fullData['Sub-Classes'].filter(s => s.nome.startsWith(className));
         
+        if(subs.length === 0) {
+             elDropdownDisplay.innerText = "Nenhuma subclasse encontrada";
+        }
+
         subs.forEach((sub) => {
+            // Cria o item da lista
             const optionDiv = document.createElement('div');
             optionDiv.className = 'option-item';
-            if (selectedValues.includes(sub.nome)) {
+            
+            // Verifica se esta opção está salva no array do personagem
+            const isChecked = selectedValues.includes(sub.nome);
+            
+            if (isChecked) {
                 optionDiv.classList.add('selected');
             }
-            
+
+            // O Input guarda o valor para salvamento
             optionDiv.innerHTML = `
-                <input type="checkbox" ${selectedValues.includes(sub.nome) ? 'checked' : ''}>
+                <input type="checkbox" value="${sub.nome}" ${isChecked ? 'checked' : ''}>
                 <span>${sub.nome}</span>
             `;
 
-            // Clique na opção (alterna seleção)
+            // Evento de Clique na opção inteira
             optionDiv.addEventListener('click', (e) => {
-                // Previne o evento de fechar o dropdown
-                e.stopPropagation();
+                e.stopPropagation(); // Não fecha o menu
 
                 const checkbox = optionDiv.querySelector('input');
-                const isSelected = !checkbox.checked;
-                checkbox.checked = isSelected;
+                const newState = !checkbox.checked; // Inverte estado
+                checkbox.checked = newState;
                 
-                if (isSelected) {
+                if (newState) {
                     optionDiv.classList.add('selected');
                 } else {
                     optionDiv.classList.remove('selected');
                 }
                 
-                saveCurrentChar(); // Salva a cada clique
+                // Salva imediatamente após clicar
+                saveCurrentChar(); 
             });
 
-            dropdownOptions.appendChild(optionDiv);
+            elDropdownOptions.appendChild(optionDiv);
         });
     }
     
+    // Atualiza o texto de exibição (ex: "Trovador, Beletrista")
     updateSubclassDisplay(selectedValues);
 }
 
 function updateSubclassDisplay(selectedValues) {
     if (!selectedValues || selectedValues.length === 0) {
-        dropdownDisplay.innerText = "Selecione...";
+        elDropdownDisplay.innerText = "Selecione...";
         return;
     }
-    // Mostra as opções selecionadas separadas por vírgula
-    // Remove texto redundante para caber melhor (ex: remove "Bardo: ")
-    const displayNames = selectedValues.map(val => val.split(':')[1] ? val.split(':')[1].trim() : val);
-    dropdownDisplay.innerText = displayNames.join(', ');
+    // Formatação visual: remove o prefixo da classe para ficar mais limpo (opcional)
+    // Ex: "Bardo: Trovador" vira "Trovador"
+    const displayNames = selectedValues.map(val => {
+        const parts = val.split(':');
+        return parts.length > 1 ? parts[1].trim() : val;
+    });
+    
+    elDropdownDisplay.innerText = displayNames.join(', ');
 }
 
-// Fecha o dropdown se clicar fora
+// Lógica para fechar o dropdown ao clicar fora
 window.addEventListener('click', (e) => {
-    if (!dropdownContainer.contains(e.target)) {
-        dropdownOptions.classList.add('hidden');
+    // Se o clique NÃO for dentro do container do dropdown
+    if (elDropdownContainer && !elDropdownContainer.contains(e.target)) {
+        elDropdownOptions.classList.add('hidden');
     }
 });
 
-// Abre/Fecha ao clicar no header
-dropdownDisplay.addEventListener('click', (e) => {
-    const char = characters.find(c => c.id === activeCharId);
-    if (char && char.class) {
-        dropdownOptions.classList.toggle('hidden');
-    }
-});
+// Lógica para abrir/fechar ao clicar no cabeçalho
+if (elDropdownDisplay) {
+    elDropdownDisplay.addEventListener('click', (e) => {
+        const char = characters.find(c => c.id === activeCharId);
+        // Só abre se tiver classe selecionada
+        if (char && char.class) {
+            elDropdownOptions.classList.toggle('hidden');
+        }
+    });
+}
 
 // ==========================================
-// RENDERIZAÇÃO DAS CARTAS
+// 5. RENDERIZAÇÃO DAS CARTAS (ORIGEM E DECK)
 // ==========================================
 
 function renderOriginCards(char) {
@@ -438,12 +475,13 @@ function renderOriginCards(char) {
         if (item) {
             const div = document.createElement('div');
             div.className = 'rpg-card static-card';
+            // Usa imagem ou placeholder
             div.innerHTML = `<img src="images/${item.img}" alt="${itemName}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(itemName)}'">`;
             container.appendChild(div);
         }
     };
 
-    // Subclasses (Array)
+    // Renderiza todas as subclasses selecionadas
     let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));
 
@@ -455,42 +493,21 @@ function saveCurrentChar() {
     const char = characters.find(c => c.id === activeCharId);
     if (!char) return;
 
+    // Salva campos básicos
     char.name = elName.value;
     char.class = elClass.value;
-
-    // Coleta do Dropdown Customizado
-    const selectedItems = Array.from(dropdownOptions.querySelectorAll('.option-item.selected span')).map(span => {
-        // Precisamos recuperar o valor original completo, pois o display pode estar truncado?
-        // Neste caso a lista interna usa o nome completo vindo do JSON, então usamos o innerText do span.
-        // O span contém o texto gerado em setupSubclassDropdown: ${sub.nome}
-        return span.innerText;
-    });
-    
-    // Correção: Precisamos garantir que pegamos o valor correto que bate com o JSON
-    // Como geramos o HTML com o nome completo, o innerText deve bastar.
-    // Porém, uma abordagem mais segura é varrer os inputs checked.
-    const checkboxes = dropdownOptions.querySelectorAll('input[type="checkbox"]');
-    const selectedValues = [];
-    // Precisamos correlacionar o input com o valor. 
-    // Uma forma melhor é reconstruir o array baseado na lista completa de dados vs o index dos checkboxes
-    // Mas, como geramos o HTML dinamicamente, podemos simplesmente refazer a busca.
-    
-    // REFAZENDO A COLETA DE DADOS DO DROPDOWN PARA SER MAIS ROBUSTA
-    const allOptionsDivs = dropdownOptions.querySelectorAll('.option-item');
-    // Filtra subclasses da classe atual no JSON para garantir ordem
-    const subs = fullData['Sub-Classes'].filter(s => s.nome.startsWith(char.class));
-    
-    allOptionsDivs.forEach((div, index) => {
-        if (div.querySelector('input').checked) {
-            selectedValues.push(subs[index].nome);
-        }
-    });
-
-    char.subclass = selectedValues;
-    updateSubclassDisplay(selectedValues);
-
     char.ancestry = elAncestry.value;
     char.community = elCommunity.value;
+
+    // --- SALVAMENTO DO DROPDOWN CORRIGIDO ---
+    // Busca todos os checkboxes marcados DENTRO da lista de opções
+    const checkboxes = elDropdownOptions.querySelectorAll('input[type="checkbox"]:checked');
+    // Mapeia para um array de strings (valores)
+    const selectedValues = Array.from(checkboxes).map(cb => cb.value);
+    
+    char.subclass = selectedValues;
+    updateSubclassDisplay(selectedValues);
+    // ----------------------------------------
 
     saveToStorage();
     renderTabs();
@@ -500,13 +517,16 @@ function saveCurrentChar() {
 function renderTabs() {
     const btnAdd = document.getElementById('btn-new-char');
     elTabs.innerHTML = '';
+    
     characters.forEach(char => {
         const btn = document.createElement('button');
         btn.className = `tab-btn ${char.id === activeCharId ? 'active' : ''}`;
+        // Nome padrão se estiver vazio
         btn.innerText = char.name || 'Novo Herói';
         btn.onclick = () => selectCharacter(char.id);
         elTabs.appendChild(btn);
     });
+
     elTabs.appendChild(btnAdd);
 }
 
@@ -515,7 +535,7 @@ function saveToStorage() {
 }
 
 // ==========================================
-// 5. DECKBUILDER
+// 6. DECKBUILDER (LÓGICA)
 // ==========================================
 
 function renderDeck() {
@@ -525,12 +545,14 @@ function renderDeck() {
     
     containerActive.innerHTML = '';
     containerReserve.innerHTML = '';
+
     let activeCount = 0;
     let reserveCount = 0;
 
     if(char.deck) {
         char.deck.forEach((card, index) => {
             const cardEl = createDeckCard(card, index);
+            
             if (card.status === 'active') {
                 containerActive.appendChild(cardEl);
                 activeCount++;
@@ -540,6 +562,7 @@ function renderDeck() {
             }
         });
     }
+
     document.getElementById('active-count').innerText = activeCount;
     document.getElementById('reserve-count').innerText = reserveCount;
 }
@@ -557,7 +580,7 @@ function createDeckCard(card, index) {
         : `<button onclick="moveCard(${index}, 'active')" title="Equipar na Mão">${iconUp}</button>`;
 
     div.innerHTML = `
-        <img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(card.name)}'">
+        <img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(card.name)}'">
         <div class="card-actions">
             ${moveBtn}
             <button class="btn-trash" onclick="removeCard(${index})" title="Remover do Grimório">${iconTrash}</button>
@@ -592,74 +615,109 @@ function openLibrary() {
     const domains = classDomains[char.class];
     const maxLevel = document.getElementById('filter-level').value;
     const listEl = document.getElementById('library-list');
+    
     listEl.innerHTML = '';
 
     domains.forEach(domainKey => {
         if (fullData[domainKey]) {
             const cards = fullData[domainKey].filter(c => c.nivel <= maxLevel);
+            
             cards.forEach(c => {
                 const isOwned = char.deck.some(d => d.name === c.nome);
                 const item = document.createElement('div');
                 item.className = `rpg-card ${isOwned ? 'card-owned' : ''}`;
                 
-                item.innerHTML = `<img src="images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(c.nome)}'">`;
+                item.innerHTML = `<img src="images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(c.nome)}'">`;
                 
                 if (!isOwned) {
+                    item.style.cursor = 'pointer';
                     item.onclick = () => addCardToDeck(c, domainKey);
                     item.title = "Clique para Adicionar";
-                    item.style.cursor = "pointer";
                 } else {
                     item.title = "Você já possui esta carta";
                 }
+
                 listEl.appendChild(item);
             });
         }
     });
+
     document.getElementById('library-modal').showModal();
 }
 
 function addCardToDeck(cardData, domainName) {
     const char = characters.find(c => c.id === activeCharId);
     if (char.deck.some(c => c.name === cardData.nome)) return;
+    
     char.deck.push({
-        name: cardData.nome, img: cardData.img, level: cardData.nivel, domain: domainName, status: 'active'
+        name: cardData.nome,
+        img: cardData.img,
+        level: cardData.nivel,
+        domain: domainName,
+        status: 'active'
     });
+
     saveToStorage();
     renderDeck();
     openLibrary();
 }
 
 // ==========================================
-// 6. EVENT LISTENERS
+// 7. EVENT LISTENERS
 // ==========================================
+
 function setupEventListeners() {
+    // Botão Novo Personagem
     document.getElementById('btn-new-char').addEventListener('click', createNewCharacter);
     
+    // Campos de Texto/Select Simples
     ['char-name', 'char-ancestry', 'char-community'].forEach(id => {
         document.getElementById(id).addEventListener('change', saveCurrentChar);
     });
 
+    // Listener Especial para Classe
     elClass.addEventListener('change', (e) => {
-        // Reseta subclasses
+        // Quando troca a classe, reinicia as subclasses (array vazio)
+        // e reconstrói o dropdown para a nova classe
         setupSubclassDropdown(e.target.value, []);
         updateClassDescription(e.target.value);
         saveCurrentChar();
-        if (e.target.value) elDeckSection.classList.remove('hidden');
+        
+        if (e.target.value) {
+            elDeckSection.classList.remove('hidden');
+        } else {
+            elDeckSection.classList.add('hidden');
+        }
     });
 
-    document.getElementById('btn-delete-char').addEventListener('click', () => document.getElementById('confirm-modal').showModal());
-    
+    // Botões de Exclusão
+    document.getElementById('btn-delete-char').addEventListener('click', () => {
+        document.getElementById('confirm-modal').showModal();
+    });
+
     document.getElementById('confirm-yes').addEventListener('click', () => {
         characters = characters.filter(c => c.id !== activeCharId);
         saveToStorage();
-        if (characters.length > 0) selectCharacter(characters[0].id); else createNewCharacter();
+        
+        if (characters.length > 0) {
+            selectCharacter(characters[0].id);
+        } else {
+            createNewCharacter();
+        }
         document.getElementById('confirm-modal').close();
     });
-    document.getElementById('confirm-no').addEventListener('click', () => document.getElementById('confirm-modal').close());
 
+    document.getElementById('confirm-no').addEventListener('click', () => {
+        document.getElementById('confirm-modal').close();
+    });
+
+    // Biblioteca
     document.getElementById('btn-open-library').addEventListener('click', openLibrary);
-    document.getElementById('close-library').addEventListener('click', () => document.getElementById('library-modal').close());
+    document.getElementById('close-library').addEventListener('click', () => {
+        document.getElementById('library-modal').close();
+    });
     document.getElementById('filter-level').addEventListener('change', openLibrary);
 }
 
+// INICIAR APP
 document.addEventListener('DOMContentLoaded', init);

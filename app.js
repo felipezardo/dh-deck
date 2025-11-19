@@ -5,7 +5,7 @@ const classDomains = {
     'Bardo': ['Graça', 'Códice'],
     'Druida': ['Sabedoria', 'Arcano'],
     'Guardião': ['Lâmina', 'Valor'],
-    'Patrulheiro': ['Sabedoria', 'Valor'],
+    'Patrulheiro': ['Sabedoria', 'Falange'],
     'Ladino': ['Meia-Noite', 'Graça'],
     'Serafim': ['Esplendor', 'Valor'],
     'Feiticeiro': ['Arcano', 'Meia-Noite'],

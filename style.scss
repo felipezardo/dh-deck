@@ -1,0 +1,504 @@
+:root {    
+    --bg-dark: #050a14;    
+    --bg-panel: #0f1724;    
+    --bg-card: #1a2639;   
+    --accent-gold: #d4af37;
+    --accent-gold-hover: #f2d06b;    
+    --text-main: #e1e8f0;
+    --text-muted: #8b9bb4;    
+    --border-color: #2c3e50;    
+    --danger: #ff4444;
+    --success: #4caf50;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: var(--bg-dark);    
+    background-image: radial-gradient(circle at top, #0f1c2e 0%, #050a14 100%);
+    color: var(--text-main);
+    font-family: 'Lato', sans-serif;
+    padding-bottom: 35px;
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+}
+
+/* HEADER */
+.main-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 1rem;
+    border-bottom: 1px solid var(--accent-gold);
+    
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.main-header h1 {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.char-tabs {
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+    justify-content: center;
+}
+
+.tab-btn {
+    background: var(--bg-panel);
+    border: 1px solid var(--border-color);
+    color: #888;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-family: 'Cinzel', serif;
+    border-radius: 4px 4px 0 0;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    background: var(--accent-gold);
+    color: #000;
+    font-weight: bold;
+}
+
+/* LAYOUT */
+.panel {
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.section-subtitle {
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: #888;
+    border-left: 3px solid var(--accent-gold);
+    padding-left: 10px;
+}
+
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+    position: relative;
+    min-width: 0;
+}
+
+.form-group label {
+    color: var(--accent-gold);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    padding: 12px;
+    border-radius: 4px;
+    font-size: 1rem;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* --- DROPDOWN PERSONALIZADO --- */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* O botão que parece um select */
+.dropdown-display {
+    background: var(--bg-card) !important;
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-main) !important;
+    padding: 12px;
+
+    /* AQUI É O SEGREDO: */
+    padding-right: 35px;
+    /* Cria um "respiro" na direita para a seta não ficar em cima do texto */
+    position: relative;
+    /* Necessário para a seta absoluta funcionar */
+    display: block;
+    /* Mudamos de Flex para Block para o texto cortar corretamente */
+
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    min-height: 45px;
+
+    /* Garante que o texto corte com (...) */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box; /* Garante que o padding não aumente a largura total */
+}
+
+/* Seta do dropdown */
+.dropdown-display::after {
+    content: '▼';
+    font-size: 0.8rem;
+    color: var(--accent-gold);
+
+    /* AQUI: Travamos a seta no lugar, independente do texto */
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    /* Centraliza verticalmente a seta */
+
+    margin-left: 0;
+    /* Removemos a margem antiga */
+}
+
+/* Lista de opções (oculta por padrão) */
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-panel) !important;
+    border-color: var(--accent-gold) !important;
+    border-top: none;
+    z-index: 200;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+}
+
+.dropdown-options.hidden {
+    display: none;
+}
+
+/* Item individual da lista */
+.option-item {
+    padding: 10px;
+    border-bottom: 1px solid #333;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.2s;
+}
+
+.option-item:hover {
+    background: #25344d !important;
+    /* Azul mais claro no hover */
+    color: #fff;
+}
+
+.option-item.selected {
+    background: rgba(192, 160, 98, 0.2);
+    color: var(--accent-gold);
+    font-weight: bold;
+}
+
+/* Checkbox estilizado */
+.option-item input[type="checkbox"] {
+    pointer-events: none;
+    /* O clique vai na div */
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent-gold);
+}
+
+/* --- CARTAS E RESTANTE --- */
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 2rem;
+    padding: 10px 0;
+}
+
+.rpg-card {
+    position: relative;
+    background: transparent;
+    min-height: 300px;
+}
+
+.rpg-card img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    background: #222;
+}
+
+.rpg-card:not(.card-owned):not(.static-card):hover {
+    transform: translateY(-10px);
+    z-index: 10;
+}
+
+.rpg-card:not(.card-owned):not(.static-card):hover img {
+    box-shadow: 0 0 20px var(--accent-gold);
+}
+
+.card-actions {
+    display: flex;
+    justify-content: space-evenly;
+    background: var(--bg-dark);
+    padding: 10px;
+    margin-top: -10px;
+    position: relative;
+    z-index: 5;
+    border-radius: 0 0 10px 10px;
+    border: 1px solid var(--border-color);
+    border-top: none;
+}
+
+.card-actions button {
+    background: none;
+    border: none;
+    color: #ccc;
+    cursor: pointer;
+}
+
+.card-actions button:hover {
+    color: var(--accent-gold);
+    transform: scale(1.2);
+}
+
+.card-actions .btn-trash:hover {
+    color: var(--danger);
+}
+
+.card-actions svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+}
+
+.rpg-card.card-owned {
+    cursor: default;
+}
+
+.rpg-card.card-owned img {
+    opacity: 0.2;
+    filter: grayscale(100%);
+}
+
+.rpg-card.card-owned::after {
+    content: '✔';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 5rem;
+    color: var(--success);
+    text-shadow: 0 0 10px #000;
+}
+
+.lore-box {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--accent-gold);
+    padding: 2rem;
+    border-radius: 8px;
+    margin-top: 2rem;
+    color: #ddd;
+    line-height: 1.6;
+}
+
+.lore-box.hidden {
+    display: none;
+}
+
+.class-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
+    text-align: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 20px;
+}
+
+.stat-item {
+    background: var(--bg-card);
+    padding: 10px;
+    border-radius: 4px;
+}
+
+.stat-label {
+    display: block;
+    color: var(--accent-gold);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 1.4rem;
+    font-family: 'Cinzel', serif;
+    color: #fff;
+}
+
+.ability-title {
+    color: var(--accent-gold);
+    font-family: 'Cinzel', serif;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+    border-left: 3px solid var(--accent-gold);
+    padding-left: 10px;
+}
+
+dialog.large-modal {
+    width: 90%;
+    max-width: 1400px;
+    height: 85vh;
+    background: #151515;
+    border: 1px solid var(--accent-gold);
+    color: #fff;
+    border-radius: 8px;
+    padding: 0;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+.sticky-header {
+    position: sticky;
+    top: 0;
+    background: #1a1a1a;
+    z-index: 50;
+    padding: 1.5rem 2rem;
+    border-bottom: 1px solid #444;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filters input {
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--accent-gold);
+    color: var(--accent-gold);
+    font-size: 1.5rem;
+    width: 60px;
+    text-align: center;
+}
+
+.close-modal-btn {
+    background: none;
+    border: 2px solid #444;
+    color: #888;
+    font-size: 1.5rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.close-modal-btn:hover {
+    color: var(--danger);
+    border-color: var(--danger);
+}
+
+.library-grid {
+    padding: 2rem;
+}
+
+.deck-area {
+    background: var(--bg-dark);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    margin-bottom: 2rem;
+}
+
+.area-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+.btn-primary {
+    background: var(--accent-gold);
+    color: #000;
+    padding: 15px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 20px;
+    text-transform: uppercase;
+}
+
+.btn-danger {
+    background: transparent;
+    border: 1px solid var(--danger);
+    color: var(--danger);
+    padding: 10px 30px;
+    cursor: pointer;
+}
+
+.danger-zone {
+    text-align: center;
+    margin-top: 5rem;
+    border-top: 1px solid #333;
+    padding-top: 2rem;
+}
+
+@media(max-width: 768px) {
+    .sticky-header {
+        flex-direction: row;
+    }
+
+    .grid-4 {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media(max-width: 400px) {
+    .class-stats-grid {
+
+        grid-template-columns: none;
+
+    }
+}

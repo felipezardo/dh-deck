@@ -125,6 +125,26 @@ h3 {
   max-width: 100%;
 }
 
+.form-group input:focus,
+.form-group select:focus {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+  border-color: var(--accent-gold) !important; /* Fica dourado ao clicar */
+  outline: none; /* Remove a borda padrão do navegador */
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.5); /* Brilho dourado suave opcional */
+}
+
+/* CORREÇÃO EXTRA: Se o navegador tentar preencher automático (Autofill) e ficar branco/amarelo */
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus,
+.form-group input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px var(--bg-card) inset !important;
+  -webkit-text-fill-color: var(--text-main) !important;
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 /* --- DROPDOWN PERSONALIZADO --- */
 .custom-dropdown {
   position: relative;

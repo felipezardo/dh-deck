@@ -14,7 +14,7 @@ const classDomains = {
     'BloodHunter': ['Blood', 'Lâmina']
 };
 
-// Textos do PDF (Atualizados conforme seu envio)
+// Textos do PDF
 const classDescriptions = {
     'Bardo': `
         <div class="class-stats-grid">
@@ -243,10 +243,10 @@ let activeCharId = null;
 const elTabs = document.getElementById('char-tabs');
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
-// Dropdown personalizado:
-const elDropdownContainer = document.getElementById('subclass-dropdown'); // a div wrapper
-const elDropdownDisplay = document.getElementById('subclass-display');   // o texto que aparece
-const elDropdownOptions = document.getElementById('subclass-options');   // a lista oculta
+// CORREÇÃO AQUI: Adicionei os prefixos 'el' para bater com o resto do código
+const elDropdownContainer = document.getElementById('subclass-dropdown'); 
+const elDropdownDisplay = document.getElementById('subclass-display');   
+const elDropdownOptions = document.getElementById('subclass-options');   
 
 const elAncestry = document.getElementById('char-ancestry');
 const elCommunity = document.getElementById('char-community');
@@ -257,7 +257,6 @@ const elDescription = document.getElementById('class-description-box');
 // 3. INICIALIZAÇÃO
 // ==========================================
 function init() {
-    // Verificação de segurança
     if (typeof fullData === 'undefined') {
         alert("ERRO: 'data.js' não encontrado. Verifique se ele está na mesma pasta e carregado antes do app.js.");
         return;
@@ -266,7 +265,6 @@ function init() {
     loadSelectOptions();
     renderTabs();
     
-    // Tenta carregar o primeiro personagem ou cria um novo se estiver vazio
     if (characters.length > 0) {
         selectCharacter(characters[0].id);
     } else {
@@ -277,13 +275,11 @@ function init() {
 }
 
 function loadSelectOptions() {
-    // Classes
     elClass.innerHTML = '<option value="">Selecione...</option>';
     Object.keys(classDomains).forEach(cls => {
         elClass.innerHTML += `<option value="${cls}">${cls}</option>`;
     });
 
-    // Ancestralidades
     elAncestry.innerHTML = '<option value="">Selecione...</option>';
     if (fullData.Ancestralidades) {
         fullData.Ancestralidades.forEach(a => {
@@ -291,7 +287,6 @@ function loadSelectOptions() {
         });
     }
 
-    // Comunidades
     elCommunity.innerHTML = '<option value="">Selecione...</option>';
     if (fullData.Comunidades) {
         fullData.Comunidades.forEach(c => {
@@ -308,7 +303,7 @@ function createNewCharacter() {
         id: Date.now(),
         name: '',
         class: '',
-        subclass: [], // Array vazio para múltiplas subclasses
+        subclass: [], 
         ancestry: '',
         community: '',
         deck: [],
@@ -324,25 +319,20 @@ function selectCharacter(id) {
     const char = characters.find(c => c.id === id);
     if (!char) return;
 
-    // Preencher Campos Básicos
     elName.value = char.name || '';
     elClass.value = char.class || '';
     elAncestry.value = char.ancestry || '';
     elCommunity.value = char.community || '';
 
-    // Garante que subclass seja um array (retrocompatibilidade)
     let selectedSubclasses = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
 
-    // Reconstrói a UI de Subclasses e marca os itens salvos
     setupSubclassDropdown(char.class, selectedSubclasses);
     
-    // Atualiza o resto da tela
     updateClassDescription(char.class);
     renderOriginCards(char);
     renderTabs();
     renderDeck();
     
-    // Mostrar/Esconder Deckbuilder
     if (char.class) {
         elDeckSection.classList.remove('hidden');
     } else {
@@ -365,17 +355,13 @@ function updateClassDescription(className) {
 // ==========================================
 
 function setupSubclassDropdown(className, selectedValues = []) {
-    // Limpa as opções antigas
     elDropdownOptions.innerHTML = ''; 
 
-    // Se não tem classe selecionada, reseta e sai
     if (!className) {
         elDropdownDisplay.innerText = "Primeiro a Classe...";
-        // Desabilitar visualmente se quiser (opcional)
         return;
     }
 
-    // Filtra subclasses disponíveis no data.js para a classe escolhida
     if (fullData['Sub-Classes']) {
         const subs = fullData['Sub-Classes'].filter(s => s.nome.startsWith(className));
         
@@ -384,29 +370,25 @@ function setupSubclassDropdown(className, selectedValues = []) {
         }
 
         subs.forEach((sub) => {
-            // Cria o item da lista
             const optionDiv = document.createElement('div');
             optionDiv.className = 'option-item';
             
-            // Verifica se esta opção está salva no array do personagem
             const isChecked = selectedValues.includes(sub.nome);
             
             if (isChecked) {
                 optionDiv.classList.add('selected');
             }
 
-            // O Input guarda o valor para salvamento
             optionDiv.innerHTML = `
                 <input type="checkbox" value="${sub.nome}" ${isChecked ? 'checked' : ''}>
                 <span>${sub.nome}</span>
             `;
 
-            // Evento de Clique na opção inteira
             optionDiv.addEventListener('click', (e) => {
-                e.stopPropagation(); // Não fecha o menu
+                e.stopPropagation(); 
 
                 const checkbox = optionDiv.querySelector('input');
-                const newState = !checkbox.checked; // Inverte estado
+                const newState = !checkbox.checked; 
                 checkbox.checked = newState;
                 
                 if (newState) {
@@ -415,7 +397,6 @@ function setupSubclassDropdown(className, selectedValues = []) {
                     optionDiv.classList.remove('selected');
                 }
                 
-                // Salva imediatamente após clicar
                 saveCurrentChar(); 
             });
 
@@ -423,7 +404,6 @@ function setupSubclassDropdown(className, selectedValues = []) {
         });
     }
     
-    // Atualiza o texto de exibição (ex: "Trovador, Beletrista")
     updateSubclassDisplay(selectedValues);
 }
 
@@ -432,8 +412,6 @@ function updateSubclassDisplay(selectedValues) {
         elDropdownDisplay.innerText = "Selecione...";
         return;
     }
-    // Formatação visual: remove o prefixo da classe para ficar mais limpo (opcional)
-    // Ex: "Bardo: Trovador" vira "Trovador"
     const displayNames = selectedValues.map(val => {
         const parts = val.split(':');
         return parts.length > 1 ? parts[1].trim() : val;
@@ -442,19 +420,15 @@ function updateSubclassDisplay(selectedValues) {
     elDropdownDisplay.innerText = displayNames.join(', ');
 }
 
-// Lógica para fechar o dropdown ao clicar fora
 window.addEventListener('click', (e) => {
-    // Se o clique NÃO for dentro do container do dropdown
     if (elDropdownContainer && !elDropdownContainer.contains(e.target)) {
         elDropdownOptions.classList.add('hidden');
     }
 });
 
-// Lógica para abrir/fechar ao clicar no cabeçalho
 if (elDropdownDisplay) {
     elDropdownDisplay.addEventListener('click', (e) => {
         const char = characters.find(c => c.id === activeCharId);
-        // Só abre se tiver classe selecionada
         if (char && char.class) {
             elDropdownOptions.classList.toggle('hidden');
         }
@@ -475,39 +449,33 @@ function renderOriginCards(char) {
         if (item) {
             const div = document.createElement('div');
             div.className = 'rpg-card static-card';
-            // Usa imagem ou placeholder
             div.innerHTML = `<img src="images/${item.img}" alt="${itemName}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(itemName)}'">`;
             container.appendChild(div);
         }
     };
 
-    // Renderiza todas as subclasses selecionadas
+    addStaticCard('Comunidades', char.community);
+    addStaticCard('Ancestralidades', char.ancestry);
+
     let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));
-
-    addStaticCard('Ancestralidades', char.ancestry);
-    addStaticCard('Comunidades', char.community);
 }
 
 function saveCurrentChar() {
     const char = characters.find(c => c.id === activeCharId);
     if (!char) return;
 
-    // Salva campos básicos
     char.name = elName.value;
     char.class = elClass.value;
     char.ancestry = elAncestry.value;
     char.community = elCommunity.value;
 
-    // --- SALVAMENTO DO DROPDOWN CORRIGIDO ---
-    // Busca todos os checkboxes marcados DENTRO da lista de opções
+    // Coleta dados do dropdown
     const checkboxes = elDropdownOptions.querySelectorAll('input[type="checkbox"]:checked');
-    // Mapeia para um array de strings (valores)
     const selectedValues = Array.from(checkboxes).map(cb => cb.value);
     
     char.subclass = selectedValues;
     updateSubclassDisplay(selectedValues);
-    // ----------------------------------------
 
     saveToStorage();
     renderTabs();
@@ -521,7 +489,6 @@ function renderTabs() {
     characters.forEach(char => {
         const btn = document.createElement('button');
         btn.className = `tab-btn ${char.id === activeCharId ? 'active' : ''}`;
-        // Nome padrão se estiver vazio
         btn.innerText = char.name || 'Novo Herói';
         btn.onclick = () => selectCharacter(char.id);
         elTabs.appendChild(btn);
@@ -580,7 +547,7 @@ function createDeckCard(card, index) {
         : `<button onclick="moveCard(${index}, 'active')" title="Equipar na Mão">${iconUp}</button>`;
 
     div.innerHTML = `
-        <img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(card.name)}'">
+        <img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(card.name)}'">
         <div class="card-actions">
             ${moveBtn}
             <button class="btn-trash" onclick="removeCard(${index})" title="Remover do Grimório">${iconTrash}</button>
@@ -625,16 +592,18 @@ function openLibrary() {
             cards.forEach(c => {
                 const isOwned = char.deck.some(d => d.name === c.nome);
                 const item = document.createElement('div');
+                
                 item.className = `rpg-card ${isOwned ? 'card-owned' : ''}`;
+                item.style.cursor = 'pointer'; 
                 
-                item.innerHTML = `<img src="images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(c.nome)}'">`;
+                item.innerHTML = `<img src="images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(c.nome)}'">`;
                 
-                if (!isOwned) {
-                    item.style.cursor = 'pointer';
-                    item.onclick = () => addCardToDeck(c, domainKey);
-                    item.title = "Clique para Adicionar";
+                if (isOwned) {
+                    item.title = "Clique para Remover";
+                    item.onclick = () => toggleCardInDeck(c, domainKey, true);
                 } else {
-                    item.title = "Você já possui esta carta";
+                    item.title = "Clique para Adicionar";
+                    item.onclick = () => toggleCardInDeck(c, domainKey, false);
                 }
 
                 listEl.appendChild(item);
@@ -645,21 +614,26 @@ function openLibrary() {
     document.getElementById('library-modal').showModal();
 }
 
-function addCardToDeck(cardData, domainName) {
+function toggleCardInDeck(cardData, domainName, shouldRemove) {
     const char = characters.find(c => c.id === activeCharId);
-    if (char.deck.some(c => c.name === cardData.nome)) return;
     
-    char.deck.push({
-        name: cardData.nome,
-        img: cardData.img,
-        level: cardData.nivel,
-        domain: domainName,
-        status: 'active'
-    });
+    if (shouldRemove) {
+        char.deck = char.deck.filter(c => c.name !== cardData.nome);
+    } else {
+        if (char.deck.some(c => c.name === cardData.nome)) return;
+        
+        char.deck.push({
+            name: cardData.nome, 
+            img: cardData.img, 
+            level: cardData.nivel, 
+            domain: domainName, 
+            status: 'active'
+        });
+    }
 
     saveToStorage();
     renderDeck();
-    openLibrary();
+    openLibrary(); 
 }
 
 // ==========================================
@@ -667,18 +641,13 @@ function addCardToDeck(cardData, domainName) {
 // ==========================================
 
 function setupEventListeners() {
-    // Botão Novo Personagem
     document.getElementById('btn-new-char').addEventListener('click', createNewCharacter);
     
-    // Campos de Texto/Select Simples
     ['char-name', 'char-ancestry', 'char-community'].forEach(id => {
         document.getElementById(id).addEventListener('change', saveCurrentChar);
     });
 
-    // Listener Especial para Classe
     elClass.addEventListener('change', (e) => {
-        // Quando troca a classe, reinicia as subclasses (array vazio)
-        // e reconstrói o dropdown para a nova classe
         setupSubclassDropdown(e.target.value, []);
         updateClassDescription(e.target.value);
         saveCurrentChar();
@@ -690,7 +659,6 @@ function setupEventListeners() {
         }
     });
 
-    // Botões de Exclusão
     document.getElementById('btn-delete-char').addEventListener('click', () => {
         document.getElementById('confirm-modal').showModal();
     });
@@ -711,7 +679,6 @@ function setupEventListeners() {
         document.getElementById('confirm-modal').close();
     });
 
-    // Biblioteca
     document.getElementById('btn-open-library').addEventListener('click', openLibrary);
     document.getElementById('close-library').addEventListener('click', () => {
         document.getElementById('library-modal').close();

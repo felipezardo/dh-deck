@@ -14,7 +14,21 @@ const classDomains = {
     'BloodHunter': ['Blood', 'Lâmina']
 };
 
-// Textos do PDF
+// Estatísticas Base (Vida e Evasão por classe)
+const classBaseStats = {
+    'Bardo': { evasion: 10, hp: 5 },
+    'Druida': { evasion: 10, hp: 6 },
+    'Guardião': { evasion: 9, hp: 7 },
+    'Patrulheiro': { evasion: 12, hp: 6 },
+    'Ladino': { evasion: 12, hp: 6 },
+    'Serafim': { evasion: 9, hp: 7 },
+    'Feiticeiro': { evasion: 10, hp: 6 },
+    'Guerreiro': { evasion: 11, hp: 6 },
+    'Mago': { evasion: 11, hp: 5 },
+    'BloodHunter': { evasion: 10, hp: 6 }
+};
+
+// Textos do PDF Completos
 const classDescriptions = {
     'Bardo': `
         <div class="class-stats-grid">
@@ -235,7 +249,7 @@ const classDescriptions = {
 // ==========================================
 // 2. ELEMENTOS E ESTADO
 // ==========================================
-const STORAGE_KEY = 'daggerheart_manager_v7';
+const STORAGE_KEY = 'daggerheart_manager_v9_full';
 let characters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let activeCharId = null;
 
@@ -243,7 +257,7 @@ let activeCharId = null;
 const elTabs = document.getElementById('char-tabs');
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
-// CORREÇÃO AQUI: Adicionei os prefixos 'el' para bater com o resto do código
+// Dropdown personalizado:
 const elDropdownContainer = document.getElementById('subclass-dropdown'); 
 const elDropdownDisplay = document.getElementById('subclass-display');   
 const elDropdownOptions = document.getElementById('subclass-options');   
@@ -258,7 +272,7 @@ const elDescription = document.getElementById('class-description-box');
 // ==========================================
 function init() {
     if (typeof fullData === 'undefined') {
-        alert("ERRO: 'data.js' não encontrado. Verifique se ele está na mesma pasta e carregado antes do app.js.");
+        alert("ERRO: 'data.js' não encontrado.");
         return;
     }
 
@@ -281,14 +295,14 @@ function loadSelectOptions() {
     });
 
     elAncestry.innerHTML = '<option value="">Selecione...</option>';
-    if (fullData.Ancestralidades) {
+    if(fullData.Ancestralidades) {
         fullData.Ancestralidades.forEach(a => {
             elAncestry.innerHTML += `<option value="${a.nome}">${a.nome}</option>`;
         });
     }
 
     elCommunity.innerHTML = '<option value="">Selecione...</option>';
-    if (fullData.Comunidades) {
+    if(fullData.Comunidades) {
         fullData.Comunidades.forEach(c => {
             elCommunity.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
         });
@@ -301,11 +315,22 @@ function loadSelectOptions() {
 function createNewCharacter() {
     const newChar = {
         id: Date.now(),
-        name: '',
-        class: '',
-        subclass: [], 
-        ancestry: '',
-        community: '',
+        name: '', class: '', subclass: [], ancestry: '', community: '',
+        stats: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 },
+        
+        // ESTRUTURA DE COMBATE
+        combat: {
+            evasion: 10,
+            armorValue: 0,      // Número no Input
+            armorMarks: [],     // Array de booleanos para os slots
+            thresholds: { major: 0, severe: 0 },
+            hopeMarks: [],      // Slots de Esperança
+            hpMax: 6,
+            hpMarks: [],        // Slots de Dano
+            stressMax: 6,
+            stressMarks: []     // Slots de Estresse
+        },
+
         deck: [],
         level: 1
     };
@@ -319,13 +344,52 @@ function selectCharacter(id) {
     const char = characters.find(c => c.id === id);
     if (!char) return;
 
+    // Campos Básicos
     elName.value = char.name || '';
     elClass.value = char.class || '';
     elAncestry.value = char.ancestry || '';
     elCommunity.value = char.community || '';
 
-    let selectedSubclasses = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
+    // Atributos
+    const s = char.stats || { agility:0, strength:0, finesse:0, instinct:0, presence:0, knowledge:0 };
+    document.getElementById('stat-agility').value = s.agility;
+    document.getElementById('stat-strength').value = s.strength;
+    document.getElementById('stat-finesse').value = s.finesse;
+    document.getElementById('stat-instinct').value = s.instinct;
+    document.getElementById('stat-presence').value = s.presence;
+    document.getElementById('stat-knowledge').value = s.knowledge;
 
+    // --- COMBATE (GARANTIA DE CARREGAMENTO) ---
+    // Se faltar dados no save antigo, usa padrão
+    const c = char.combat || { 
+        evasion: 10, armorValue: 0, armorMarks: [], 
+        thresholds: { major:0, severe:0 }, hopeMarks: [], 
+        hpMax: 6, hpMarks: [], stressMax: 6, stressMarks: [] 
+    };
+
+    document.getElementById('char-evasion').value = c.evasion;
+    
+    // Armadura
+    document.getElementById('char-armor-value').value = c.armorValue;
+    renderResourceSlots('armor-slots-display', c.armorValue, c.armorMarks);
+
+    // Limiares
+    document.getElementById('thresh-major-val').value = c.thresholds.major;
+    document.getElementById('thresh-severe-val').value = c.thresholds.severe;
+
+    // Esperança (Sempre 6)
+    renderResourceSlots('hope-slots-display', 6, c.hopeMarks);
+
+    // PV
+    document.getElementById('char-hp-max').value = c.hpMax;
+    renderResourceSlots('hp-slots-display', c.hpMax, c.hpMarks);
+
+    // Estresse
+    document.getElementById('char-stress-max').value = c.stressMax;
+    renderResourceSlots('stress-slots-display', c.stressMax, c.stressMarks);
+    // --------------------------------------------
+
+    let selectedSubclasses = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     setupSubclassDropdown(char.class, selectedSubclasses);
     
     updateClassDescription(char.class);
@@ -333,10 +397,31 @@ function selectCharacter(id) {
     renderTabs();
     renderDeck();
     
-    if (char.class) {
-        elDeckSection.classList.remove('hidden');
-    } else {
-        elDeckSection.classList.add('hidden');
+    if (char.class) elDeckSection.classList.remove('hidden');
+    else elDeckSection.classList.add('hidden');
+}
+
+// --- FUNÇÃO AUXILIAR DE RENDERIZAÇÃO DE SLOTS ---
+function renderResourceSlots(containerId, count, marksArray = []) {
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = '';
+
+    count = parseInt(count) || 0; // Segurança
+
+    for (let i = 0; i < count; i++) {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'custom-checkbox';
+        
+        // Recupera estado salvo
+        if (marksArray[i] === true) {
+            checkbox.checked = true;
+        }
+
+        // Salva ao clicar
+        checkbox.addEventListener('change', saveCurrentChar);
+        container.appendChild(checkbox);
     }
 }
 
@@ -374,10 +459,7 @@ function setupSubclassDropdown(className, selectedValues = []) {
             optionDiv.className = 'option-item';
             
             const isChecked = selectedValues.includes(sub.nome);
-            
-            if (isChecked) {
-                optionDiv.classList.add('selected');
-            }
+            if (isChecked) optionDiv.classList.add('selected');
 
             optionDiv.innerHTML = `
                 <input type="checkbox" value="${sub.nome}" ${isChecked ? 'checked' : ''}>
@@ -454,6 +536,7 @@ function renderOriginCards(char) {
         }
     };
 
+    // ORDEM INVERTIDA (Comunidade -> Ancestralidade -> Subclasse)
     addStaticCard('Comunidades', char.community);
     addStaticCard('Ancestralidades', char.ancestry);
 
@@ -470,12 +553,44 @@ function saveCurrentChar() {
     char.ancestry = elAncestry.value;
     char.community = elCommunity.value;
 
-    // Coleta dados do dropdown
+    // Dropdown
     const checkboxes = elDropdownOptions.querySelectorAll('input[type="checkbox"]:checked');
     const selectedValues = Array.from(checkboxes).map(cb => cb.value);
-    
     char.subclass = selectedValues;
     updateSubclassDisplay(selectedValues);
+
+    // Atributos
+    char.stats = {
+        agility: document.getElementById('stat-agility').value,
+        strength: document.getElementById('stat-strength').value,
+        finesse: document.getElementById('stat-finesse').value,
+        instinct: document.getElementById('stat-instinct').value,
+        presence: document.getElementById('stat-presence').value,
+        knowledge: document.getElementById('stat-knowledge').value
+    };
+
+    // --- COLETA DE COMBATE ---
+    const getMarksFromContainer = (containerId) => {
+        const container = document.getElementById(containerId);
+        if (!container) return [];
+        const boxes = container.querySelectorAll('input[type="checkbox"]');
+        return Array.from(boxes).map(box => box.checked);
+    };
+
+    char.combat = {
+        evasion: document.getElementById('char-evasion').value,
+        armorValue: document.getElementById('char-armor-value').value,
+        armorMarks: getMarksFromContainer('armor-slots-display'),
+        thresholds: {
+            major: document.getElementById('thresh-major-val').value,
+            severe: document.getElementById('thresh-severe-val').value
+        },
+        hopeMarks: getMarksFromContainer('hope-slots-display'),
+        hpMax: document.getElementById('char-hp-max').value,
+        hpMarks: getMarksFromContainer('hp-slots-display'),
+        stressMax: document.getElementById('char-stress-max').value,
+        stressMarks: getMarksFromContainer('stress-slots-display')
+    };
 
     saveToStorage();
     renderTabs();
@@ -519,7 +634,6 @@ function renderDeck() {
     if(char.deck) {
         char.deck.forEach((card, index) => {
             const cardEl = createDeckCard(card, index);
-            
             if (card.status === 'active') {
                 containerActive.appendChild(cardEl);
                 activeCount++;
@@ -643,16 +757,38 @@ function toggleCardInDeck(cardData, domainName, shouldRemove) {
 function setupEventListeners() {
     document.getElementById('btn-new-char').addEventListener('click', createNewCharacter);
     
-    ['char-name', 'char-ancestry', 'char-community'].forEach(id => {
-        document.getElementById(id).addEventListener('change', saveCurrentChar);
+    // Inputs Gerais
+    const inputs = document.querySelectorAll('input:not(.custom-checkbox), select');
+    inputs.forEach(input => {
+        input.addEventListener('change', (e) => {
+            // Se mudou um valor que define quantidade de slots (Armadura, HP, Stress)
+            // Precisamos salvar E redesenhar os slots
+            if (['char-armor-value', 'char-hp-max', 'char-stress-max'].includes(e.target.id)) {
+                saveCurrentChar();
+                selectCharacter(activeCharId); // Força redesenho
+            } else {
+                saveCurrentChar();
+            }
+        });
     });
 
     elClass.addEventListener('change', (e) => {
-        setupSubclassDropdown(e.target.value, []);
-        updateClassDescription(e.target.value);
-        saveCurrentChar();
+        const className = e.target.value;
         
-        if (e.target.value) {
+        // Auto-preencher Stats se for uma nova classe
+        if (classBaseStats[className]) {
+            document.getElementById('char-evasion').value = classBaseStats[className].evasion;
+            document.getElementById('char-hp-max').value = classBaseStats[className].hp;
+            
+            // Salva e recarrega para mostrar os slots de HP corretos
+            saveCurrentChar();
+            selectCharacter(activeCharId);
+        }
+        
+        setupSubclassDropdown(className, []);
+        updateClassDescription(className);
+        
+        if (className) {
             elDeckSection.classList.remove('hidden');
         } else {
             elDeckSection.classList.add('hidden');

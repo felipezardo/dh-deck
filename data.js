@@ -321,6 +321,11 @@ const fullData = {
       "nivel": 1,
       "nome": "Silvestre",
       "img": "comunidade_silvestre.jpg"
+    },
+    {
+      "nivel": 1,
+      "nome": "Esquecido",
+      "img": "esquecido.png"
     }
   ],
   "Ancestralidades": [

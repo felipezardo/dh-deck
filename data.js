@@ -274,6 +274,11 @@ const fullData = {
       "nivel": 1,
       "nome": "BloodHunter: Ordem do Mutante (Fundamental)",
       "img": "bloodhuner_ordem_do_mutante.jpg"
+    },
+     {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem Licantropa (Fundamental)",
+      "img": "ORDEM LICANTROPA.png"
     }
   ],
   "Comunidades": [
@@ -418,12 +423,7 @@ const fullData = {
       "nivel": 1,
       "nome": "Quacho",
       "img": "quacho.jpg"
-    },
-    {
-      "nivel": 1,
-      "nome": "Karati-Firbolg",
-      "img": "KATARI-FIRBOLG.png"
-    },
+    },    
     {
       "nivel": 1,
       "nome": "Aetheris",
@@ -1499,5 +1499,38 @@ const fullData = {
       "nome": "Sanguine Feast",
       "img": "10-sanguine feast.jpg"
     }
+  ],
+  "Transformacoes": [
+    {
+      "nivel": 1,
+      "nome": "Lobisomem",
+      "img": "LOBISOMEM.png" 
+    },
+    {
+      "nivel": 1,
+      "nome": "Vampiro",
+      "img": "VAMPIRO .png"
+    },
+    {
+      "nivel": 1,
+      "nome": "Semideus",
+      "img": "SEMIDEUS.png"
+    },
+    {
+      "nivel": 1,
+      "nome": "Metamorfo",
+      "img": "METAMORFO .png"
+    },
+    {
+      "nivel": 1,
+      "nome": "Reanimado",
+      "img": "REANIMADO .png"
+    },
+    {
+      "nivel": 1,
+      "nome": "Fantasma",
+      "img": "FANTASMA .png"
+    }
+    
   ]
 };

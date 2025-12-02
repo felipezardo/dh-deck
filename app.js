@@ -264,6 +264,7 @@ const elDropdownOptions = document.getElementById('subclass-options');
 
 const elAncestry = document.getElementById('char-ancestry');
 const elCommunity = document.getElementById('char-community');
+const elTransformation = document.getElementById('char-transformation');
 const elDeckSection = document.getElementById('deckbuilder-section');
 const elDescription = document.getElementById('class-description-box');
 
@@ -307,6 +308,14 @@ function loadSelectOptions() {
             elCommunity.innerHTML += `<option value="${c.nome}">${c.nome}</option>`;
         });
     }
+    // Transformações
+    const elTransformation = document.getElementById('char-transformation');
+    if(elTransformation && fullData.Transformacoes) {
+        elTransformation.innerHTML = '<option value="">Nenhuma</option>';
+        fullData.Transformacoes.forEach(t => {
+            elTransformation.innerHTML += `<option value="${t.nome}">${t.nome}</option>`;
+        });
+    }
 }
 
 // ==========================================
@@ -315,7 +324,7 @@ function loadSelectOptions() {
 function createNewCharacter() {
     const newChar = {
         id: Date.now(),
-        name: '', class: '', subclass: [], ancestry: '', community: '',
+        name: '', class: '', subclass: [], ancestry: '', community: '', transformation: '',
         stats: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 },
         
         // ESTRUTURA DE COMBATE
@@ -349,6 +358,8 @@ function selectCharacter(id) {
     elClass.value = char.class || '';
     elAncestry.value = char.ancestry || '';
     elCommunity.value = char.community || '';
+    const elTrans = document.getElementById('char-transformation');
+    if(elTrans) elTrans.value = char.transformation || '';
 
     // Atributos
     const s = char.stats || { agility:0, strength:0, finesse:0, instinct:0, presence:0, knowledge:0 };
@@ -540,6 +551,10 @@ function renderOriginCards(char) {
     addStaticCard('Comunidades', char.community);
     addStaticCard('Ancestralidades', char.ancestry);
 
+    if (char.transformation) {
+        addStaticCard('Transformacoes', char.transformation);
+    }
+
     let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));
 }
@@ -552,6 +567,8 @@ function saveCurrentChar() {
     char.class = elClass.value;
     char.ancestry = elAncestry.value;
     char.community = elCommunity.value;
+    const elTrans = document.getElementById('char-transformation');
+    if(elTrans) char.transformation = elTrans.value;
 
     // Dropdown
     const checkboxes = elDropdownOptions.querySelectorAll('input[type="checkbox"]:checked');

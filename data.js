@@ -364,9 +364,35 @@ const fullData = {
     },
     {
       "nivel": 1,
-      "nome": "Esquecido",
+      "nome": "Esquecida",
       "img": "esquecido.png"
-    }
+    },
+     {
+      "nivel": 1,
+      "nome": "Belica",
+      "img": "community-BELICA.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Glacial",
+      "img": "community-glacial.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Liberta",
+      "img": "community-liberta.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Rustica",
+      "img": "community-rustica.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Desertica",
+      "img": "-community-desertica.png"
+    },
+    
   ],
   "Ancestralidades": [
     {

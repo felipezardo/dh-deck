@@ -517,9 +517,34 @@ const fullData = {
     },    
     {
       "nivel": 1,
-      "nome": "Aetheris",
-      "img": "AETHERIS.png"
-    }
+      "nome": "Etereo",
+      "img": "ETEREO.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Celeste",
+      "img": "celeste.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Igneo",
+      "img": "IGNEO .png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Marideo",
+      "img": "MARIDEO.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Terrestre",
+      "img": "TERRESTRE .png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Gnomo",
+      "img": "gnomo.png"
+    },
   ],
   "Arcano": [
     {

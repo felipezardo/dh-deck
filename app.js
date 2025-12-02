@@ -11,7 +11,8 @@ const classDomains = {
     'Feiticeiro': ['Arcano', 'Meia-Noite'],
     'Guerreiro': ['Lâmina', 'Falange'],
     'Mago': ['Códice', 'Esplendor'],
-    'BloodHunter': ['Blood', 'Lâmina']
+    'BloodHunter': ['Blood', 'Lâmina'],
+    'Pugilista': ['Valor', 'Falange']
 };
 
 // Estatísticas Base (Vida e Evasão por classe)
@@ -25,7 +26,8 @@ const classBaseStats = {
     'Feiticeiro': { evasion: 10, hp: 6 },
     'Guerreiro': { evasion: 11, hp: 6 },
     'Mago': { evasion: 11, hp: 5 },
-    'BloodHunter': { evasion: 10, hp: 6 }
+    'BloodHunter': { evasion: 10, hp: 6 },
+    'Pugilista': { evasion: 10, hp: 6 }
 };
 
 // Textos do PDF Completos
@@ -242,6 +244,31 @@ const classDescriptions = {
         <div class="ability-block">
             <div class="ability-title">Habilidade de Classe: Psicometria Sombria</div>
             <p>Enquanto inspeciona uma criatura, um local ou um objeto em alcance Muito Próximo, faça um Teste de Conjuração (12). Em um sucesso, marque 1 PF para ter uma visão da violência mais recente envolvendo o alvo, e até que você termine um descanso, você tem vantagem em qualquer rolagem de ação para relembrar conhecimento sobre coisas na visão.</p>
+        </div>
+    `,
+    'Pugilista': `
+        <div class="class-stats-grid">
+            <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Valor e Falange</span></div>
+            <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">10</span></div>
+            <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">6</span></div>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Esperança: Golpe Atordoante</div>
+            <p>Gaste 3 de Esperança quando tiver sucesso em um ataque para Atordoar temporariamente seu alvo e forçá-lo a marcar 1 PF. Enquanto Atordoado, ele tem desvantagem nas rolagens de ataque.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Classe: EU SOU A ARMA</div>
+            <p>Enquando não tiver nenhuma arma equipada , você tem:
+
+            Bônus de +1 na sua Evasão.
+
+            Seus ataques desarmados são considerados uma arma corpo a corpo use o atributo que quiser. O ataque causa d8+d6 de dano físico usando sua Proficiência</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">COMBO STRIKES d4 ◯ d6 ◯ d8 ◯ d10 ◯</div>
+            <p>Depois de fazer uma rolagem de ataque com uma arma de Corpo-a-Corpo mas antes de causar dano ao oponente, gaste 1 PF para iniciar um Combo. Quando fizer isso, role seu Dado de Combo e anote o valor. Então role de novo seu Dado de Combo. Se o valor da segunda rolagem for igual ou maior que sua primeira rolagem, continue rolando até que a rolagem no seu Dado de Combo seja menor que o valor da rolagem imediatamente anterior. Some o valor de todas as rolagens que conseguiu e adicione o total ao dano da sua arma. Estes valores não podem ser ajustados por efeitos que afetem dados de dano.
+
+            Seu Dado de Combo começa como d4. Quando subir de nível, uma vez por patamar você pode usar uma de suas opções de aprimoramento para aumentar seu Dado de Combo.</p>
         </div>
     `
 };

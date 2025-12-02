@@ -314,6 +314,36 @@ const fullData = {
       "nivel": 1,
       "nome": "BloodHunter: Ordem do Exterminador de Espectros (Maestria)",
       "img": "bloodhunter_ghost_maestria.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Pugilista: Colosso (Fundamental)",
+      "img": "pugilista_colosso_fundamental.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Pugilista: Colosso (Especializacao)",
+      "img": "pugilista_colosso_especializacao.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Pugilista: Colosso (Maestria)",
+      "img": "pugilista_colosso_maestria.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Pugilista: Artista Marcial (Fundamental)",
+      "img": "pugilista_artista_fundamental.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Pugilista: Artista Marcial (Especializacao)",
+      "img": "pugilista_artista_especializacao.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "Pugilista: Artista Marcial (Maestria)",
+      "img": "pugilista_artista_maestria.png"
     }
   ],
   "Comunidades": [

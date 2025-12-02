@@ -273,12 +273,47 @@ const fullData = {
     {
       "nivel": 1,
       "nome": "BloodHunter: Ordem do Mutante (Fundamental)",
-      "img": "bloodhuner_ordem_do_mutante.jpg"
+      "img": "bloodhunter_mutante_fundamental.png"
+    },
+    {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Mutante (Especializacao)",
+      "img": "bloodhunter_mutante_especializacao.png"
+    },
+    {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Mutante (Maestria)",
+      "img": "bloodhunter_mutante_maestria.png"
     },
      {
       "nivel": 1,
-      "nome": "BloodHunter: Ordem Licantropa (Fundamental)",
-      "img": "ORDEM LICANTROPA.png"
+      "nome": "BloodHunter: Ordem do Licantropo (Fundamental)",
+      "img": "bloodhunter_lycan_fundamental.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Licantropo (Especializacao)",
+      "img": "bloodhunter_lycan_especializacao.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Licantropo (Maestria)",
+      "img": "bloodhunter_lycan_especializacao.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Exterminador de Espectros (Fundamental)",
+      "img": "bloodhunter_ghost_fundamental.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Exterminador de Espectros (Especializacao)",
+      "img": "bloodhunter_ghost_especializacao.png"
+    },
+     {
+      "nivel": 1,
+      "nome": "BloodHunter: Ordem do Exterminador de Espectros (Maestria)",
+      "img": "bloodhunter_ghost_maestria.png"
     }
   ],
   "Comunidades": [

@@ -940,6 +940,8 @@ dialog::backdrop {
     font-size: 1rem !important;
 }
 
+.invisivel {display: none;}
+
 /* RESPONSIVIDADE */
 @media(max-width: 768px) {
     .combat-grid {

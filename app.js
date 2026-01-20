@@ -47,6 +47,28 @@ const classDescriptions = {
             <p>Uma vez por sessão, descreva como você inspira o grupo e forneça a você e seus aliados um Dado de Inspiração. No 1º nível, seu Dado de Inspiração é d6. Um personagem pode rolar o Dado de Inspiração e somar o resultado a um teste, teste de reação ou rolagem de dano, ou para recuperar um número de PF igual ao resultado. No fim de cada sessão, Dados de Inspiração não utilizados são perdidos.</p>
             <p><em>No 5º nível, seu Dado de Inspiração aumenta para d8.</em></p>
         </div>
+         <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>0 Agilidade, −1 Força, +1 Acuidade,
+0 Instinto, +2 Presença, +1 Conhecimento</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Rapieira | Presença corpo a corpo | d8 fís | Uma mão
+Veloz: ao fazer um ataque, marque 1 Ponto de Fadiga para
+atingir outra criatura no alcance.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
+            <p>Adaga pequena | Acuidade CaC | d8 fís | Uma mão
+Par: sua arma principal causa +2 de dano em alvos CaC</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>
+            
+            <p>Gibão | Limiares base 5/11 | Armadura base 3
+Flexível: +1 em Evasão</p>
+        </div>
     `,
     'Druida': `
         <div class="class-stats-grid">
@@ -66,6 +88,25 @@ const classDescriptions = {
         <div class="ability-block">
             <div class="ability-title">Habilidade de Classe: Dádiva da Natureza</div>
             <p>Você pode criar à vontade efeitos sutis e inofensivos envolvendo a natureza, como fazer uma flor crescer rapidamente, invocar uma brisa ou acender uma fogueira.</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+1 Agilidade, 0 Força, +1 Acuidade,
++2 Instinto, −1 Presença, 0 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Cajado curto | Instinto próximo | d8+1 mág | Uma mão</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
+            <p>Escudo redondo | Força corpo a corpo | d4 fís | Uma mão
+Armadura: +1 Ponto de Armadura</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>
+            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
         </div>
     `,
     'Guardião': `
@@ -89,6 +130,26 @@ const classDescriptions = {
             </ul>
             <p><em>No 5º nível, seu Dado de Determinação aumenta para d6.</em></p>
         </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+1 Agilidade, +2 Força, −1 Acuidade,
+0 Instinto, +1 Presença, 0 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Machado de batalha | Força corpo a corpo
+d10+3 fís | Duas mãos</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
+            <p>Cota de malha | Limiares base 7/15 | Armadura base 4
+Pesada: −1 em Evasão</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>
+            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
+        </div>
     `,
     'Patrulheiro': `
         <div class="class-stats-grid">
@@ -108,6 +169,20 @@ const classDescriptions = {
                 <li>Quando causar dano a esse alvo, ele deve marcar 1 Ponto de Fadiga;</li>
                 <li>Quando erra um ataque contra ele, você pode encerrar sua Marca da Presa para rolar seus Dados de Dualidade novamente.</li>
             </ul>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+2 Agilidade, 0 Força, +1 Acuidade,
++1 Instinto, −1 Presença, 0 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Arco curto | Agilidade distante | d6+3 fís | Duas mãos</p>
+        </div>
+        
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
         </div>
     `,
     'Ladino': `
@@ -134,6 +209,25 @@ const classDescriptions = {
                 <li>8º ao 10º nível: +4d6</li>
             </ul>
         </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+1 Agilidade, −1 Força, +2 Acuidade,
+0 Instinto, +1 Presença, 0 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Adaga | Acuidade corpo a corpo | d8+1 fís | Uma mão</p>
+        </div>
+          <div class="ability-block">
+            <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
+            <p>Adaga pequena | Acuidade CaC | d8 fís | Uma mão
+Par: sua arma principal causa +2 de dano em alvos CaC</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Gibão | Limiares base 5/11 | Armadura base 3
+Flaxível: +1 em Evasão</p>
+        </div>
     `,
     'Serafim': `
         <div class="class-stats-grid">
@@ -155,6 +249,26 @@ const classDescriptions = {
                 <li>Receber um número de Pontos de Esperança igual ao resultado.</li>
             </ul>
             <p>No fim de cada sessão, Dados de Oração não utilizados são perdidos.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>0 Agilidade, +2 Força, 0 Acuidade,
++1 Instinto, +1 Presença, −1 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Machado sagrado | Força corpo a corpo
+d8+1 mág | Uma mão</p>
+        </div>
+          <div class="ability-block">
+            <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
+            <p>Escudo redondo | Força corpo a corpo | d4 fís | Uma mão
+Armadura: +1 Ponto de Armadura</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Cota de malha | Limiares base 7/15 | Armadura base 4
+Pesada: −1 em Evasão</p>
         </div>
     `,
     'Feiticeiro': `
@@ -183,6 +297,22 @@ const classDescriptions = {
                 <li>Aprimorar um feitiço que cause dano, recebendo um bônus na rolagem de dano igual ao dobro do nível da carta.</li>
             </ul>
         </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>0 Agilidade, −1 Força, +1 Acuidade,
++2 Instinto, +1 Presença, 0 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Cajado duplo | Instinto distante | d6+3 mág | Duas mãos</p>
+        </div>
+          <div class="ability-block">
+            
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Gibão | Limiares base 5/11 | Armadura base 3
+Flexível: +1 em Evasão</p>
+        </div>
     `,
     'Guerreiro': `
         <div class="class-stats-grid">
@@ -207,6 +337,22 @@ const classDescriptions = {
             <div class="ability-title">Habilidade de Classe: Treinamento de Combate</div>
             <p>Você ignora o tipo de empunhadura de armas equipadas. Ao causar dano físico, você recebe um bônus igual ao seu nível na rolagem de dano.</p>
         </div>
+          <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+2 Agilidade, +1 Força, 0 Acuidade,
++1 Instinto, −1 Presença, 0 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Espada longa | Agilidade corpo a corpo
+d8+3 fís | Duas mãos</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Cota de malha | Limiares base 7/ 15 | Armadura base 4
+Pesada: −1 em Evasão</p>
+        </div>
     `,
     'Mago': `
         <div class="class-stats-grid">
@@ -226,6 +372,24 @@ const classDescriptions = {
             <div class="ability-title">Habilidade de Classe: Prestidigitação</div>
             <p>Você pode executar efeitos mágicos sutis e inofensivos à vontade. Por exemplo, você pode mudar a cor de um objeto, criar um cheiro, acender uma vela, fazer um pequeno objeto flutuar, iluminar uma sala ou consertar um objeto pequeno.</p>
         </div>
+         <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>−1 Agilidade, 0 Força, 0 Acuidade,
++1 Instinto, +1 Presença, +2 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Cajado grande | Conhecimento muito distante
+d6 mág | Duas mãos
+Poderoso: ao acertar um ataque, role +1 dado de dano e
+descarte o de resultado mais baixo.</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
+        </div>
+        
     `,
     'BloodHunter': `
         <div class="class-stats-grid">
@@ -244,6 +408,22 @@ const classDescriptions = {
         <div class="ability-block">
             <div class="ability-title">Habilidade de Classe: Psicometria Sombria</div>
             <p>Enquanto inspeciona uma criatura, um local ou um objeto em alcance Muito Próximo, faça um Teste de Conjuração (12). Em um sucesso, marque 1 PF para ter uma visão da violência mais recente envolvendo o alvo, e até que você termine um descanso, você tem vantagem em qualquer rolagem de ação para relembrar conhecimento sobre coisas na visão.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+1 Instinto, 0 Presença, 0 Conhecimento |Matador de Fantasmas / Mutante: +2 Agilidade, −1 Força,+1 Acuidade |Licantropo: +1 Agilidade, +2 Força, −1 Acuidade</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Matador de Fantasmas / Mutante: 
+Espada longa | Agilidade corpo a corpo
+d8+3 fís | Duas mãos| |Licantropo: Machado de batalha | Força corpo a corpo
+d10+3 fís | Duas mãos</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
         </div>
     `,
     'Pugilista': `
@@ -269,6 +449,19 @@ const classDescriptions = {
             <p>Depois de fazer uma rolagem de ataque com uma arma de Corpo-a-Corpo mas antes de causar dano ao oponente, gaste 1 PF para iniciar um Combo. Quando fizer isso, role seu Dado de Combo e anote o valor. Então role de novo seu Dado de Combo. Se o valor da segunda rolagem for igual ou maior que sua primeira rolagem, continue rolando até que a rolagem no seu Dado de Combo seja menor que o valor da rolagem imediatamente anterior. Some o valor de todas as rolagens que conseguiu e adicione o total ao dano da sua arma. Estes valores não podem ser ajustados por efeitos que afetem dados de dano.
 
             Seu Dado de Combo começa como d4. Quando subir de nível, uma vez por patamar você pode usar uma de suas opções de aprimoramento para aumentar seu Dado de Combo.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+1 Agilidade, +1 Força, 0 Acuidade, +2 Instinto, 0 Presença, -1 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Quarterstaff - Instinct Melee - d10+3 phy - Two-Handed</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
         </div>
     `
 };

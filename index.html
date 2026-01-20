@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Daggersheets V1</title>
+    <title>Daggersheets V2</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="images/logo.png" type="image/png" />
@@ -11,7 +11,7 @@
 <body>
 
     <header class="main-header">
-        <h1>Daggercards</h1>
+        <h1>Daggersheets</h1>
         <nav id="char-tabs" class="char-tabs">
             <button id="btn-new-char" class="tab-btn add-btn">+</button>
         </nav>
@@ -39,14 +39,15 @@
                             Primeiro a Classe...
                         </div>
                         <div class="dropdown-options hidden" id="subclass-options">
-                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="form-group">
                     <label>Transformação (Opcional)</label>
                     <select id="char-transformation">
                         <option value="">Nenhuma</option>
-                        </select>
+                    </select>
                 </div>
 
                 <div class="form-group">
@@ -57,125 +58,179 @@
                     <label>Comunidade</label>
                     <select id="char-community"><option value="">Selecione...</option></select>
                 </div>
-                
             </div>
 
             <h3 class="section-subtitle">Classe & Herança</h3>
             <div id="origin-cards-container" class="cards-grid static-grid"></div>
 
-            <h3 class="section-subtitle invisivel">Atributos</h3>
-            <div class="stats-grid invisivel">
-                <div class="stat-card"><label>Agilidade</label><input type="number" id="stat-agility" value="0"></div>
-                <div class="stat-card"><label>Força</label><input type="number" id="stat-strength" value="0"></div>
-                <div class="stat-card"><label>Acuidade</label><input type="number" id="stat-finesse" value="0"></div>
-                <div class="stat-card"><label>Instinto</label><input type="number" id="stat-instinct" value="0"></div>
-                <div class="stat-card"><label>Presença</label><input type="number" id="stat-presence" value="0"></div>
-                <div class="stat-card"><label>Conhecimento</label><input type="number" id="stat-knowledge" value="0"></div>
-            </div>
+            <div id="class-description-box" class="lore-box hidden"></div>
 
-            <div class="combat-grid invisivel">
-                <div class="combat-col defense-col">
-                    <div class="stat-box-large">
-                        <label>Evasão</label>
-                        <input type="number" id="char-evasion" value="10">
-                    </div>
-                    
-                    <div class="armor-section">
-                        <div class="stat-box-large shield-shape">
-                            <label>Armadura</label>
-                            <input type="number" id="char-armor-value" value="0" min="0" max="12">
-                        </div>
-                        <div class="slots-container" id="armor-slots-display"></div>
-                        <small class="slot-label">Marque para reduzir dano</small>
-                    </div>
+            <hr class="divider">
+
+            <div class="sheet-tabs-container">
+                <div class="sheet-tabs">
+                    <button class="sheet-tab-btn active" data-target="tab-stats">Estatísticas</button>
+                    <button class="sheet-tab-btn" data-target="tab-equip">Equipamento</button>
+                    <button class="sheet-tab-btn" data-target="tab-deck">Cartas</button>
                 </div>
 
-                <div class="combat-col center-col">
-                    <div class="threshold-container">
-                        <div class="thresh-label">
-                            <span>Menor</span>
-                            <small>(1 PV)</small>
+                <div id="tab-stats" class="sheet-tab-content active">
+                    <h3 class="section-subtitle">Atributos</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card"><label>Agilidade</label><input type="number" id="stat-agility" value="0"></div>
+                        <div class="stat-card"><label>Força</label><input type="number" id="stat-strength" value="0"></div>
+                        <div class="stat-card"><label>Acuidade</label><input type="number" id="stat-finesse" value="0"></div>
+                        <div class="stat-card"><label>Instinto</label><input type="number" id="stat-instinct" value="0"></div>
+                        <div class="stat-card"><label>Presença</label><input type="number" id="stat-presence" value="0"></div>
+                        <div class="stat-card"><label>Conhecimento</label><input type="number" id="stat-knowledge" value="0"></div>
+                    </div>
+
+                    <h3 class="section-subtitle">Recursos</h3>
+                    <div class="combat-grid">
+                        <div class="combat-col defense-col">
+                            <div class="stat-box-large">
+                                <label>Evasão</label>
+                                <input type="number" id="char-evasion" value="10">
+                            </div>
+                            
+                            <div class="armor-section">
+                                <div class="stat-box-large shield-shape">
+                                    <label>Armadura</label>
+                                    <input type="number" id="char-armor-value" value="0" min="0" max="12">
+                                </div>
+                                <div class="slots-container" id="armor-slots-display"></div>
+                                <small class="slot-label">Marque para reduzir dano</small>
+                            </div>
                         </div>
                         
-                        <div class="thresh-separator">
-                            <!-- <span>&lt;</span> -->
-                            <input type="number" id="thresh-major-val" class="thresh-input" placeholder="0">
-                        </div>
+                        <div class="combat-col center-col">
+                            <div class="threshold-container">
+                                <div class="thresh-label"><span>Menor</span><small>(1 PV)</small></div>
+                                <div class="thresh-separator"><input type="number" id="thresh-major-val" class="thresh-input" placeholder="0"></div>
+                                <div class="thresh-label"><span>Maior</span><small>(2 PV)</small></div>
+                                <div class="thresh-separator"><input type="number" id="thresh-severe-val" class="thresh-input" placeholder="0"></div>
+                                <div class="thresh-label"><span>Grave</span><small>(3 PV)</small></div>
+                            </div>
 
-                        <div class="thresh-label">
-                            <span>Maior</span>
-                            <small>(2 PV)</small>
-                        </div>
-
-                        <div class="thresh-separator">
-                            <!-- <span>&lt;</span> -->
-                            <input type="number" id="thresh-severe-val" class="thresh-input" placeholder="0">
-                        </div>
-
-                        <div class="thresh-label">
-                            <span>Grave</span>
-                            <small>(3 PV)</small>
-                        </div>
-                    </div>
-
-                    <div class="resource-track">
-                        <div class="resource-header-row">
-                            <label>Esperança</label>
-                            <input type="hidden" id="char-hope-max" value="6"> 
-                        </div>
-                        <div class="slots-container hope-slots" id="hope-slots-display"></div>
-                    </div>
-                </div>
-
-                <div class="combat-col">
-                    <div class="resource-track">
-                        <div class="resource-header-row">
-                            <label>PV</label>
-                            <div class="max-input-wrapper">
-                                <span>Máx:</span>
-                                <input type="number" id="char-hp-max" value="6">
+                            <div class="resource-track">
+                                <div class="resource-header-row">
+                                    <label>Esperança</label>
+                                    <input type="hidden" id="char-hope-max" value="6"> 
+                                </div>
+                                <div class="slots-container hope-slots" id="hope-slots-display"></div>
                             </div>
                         </div>
-                        <div class="slots-container hp-slots" id="hp-slots-display"></div>
-                    </div>
 
-                    <div class="resource-track">
-                        <div class="resource-header-row">
-                            <label>PF</label>
-                            <div class="max-input-wrapper">
-                                <span>Máx:</span>
-                                <input type="number" id="char-stress-max" value="6">
+                        <div class="combat-col">
+                            <div class="resource-track">
+                                <div class="resource-header-row">
+                                    <label>PV</label>
+                                    <div class="max-input-wrapper">
+                                        <span>Máx:</span>
+                                        <input type="number" id="char-hp-max" value="6">
+                                    </div>
+                                </div>
+                                <div class="slots-container hp-slots" id="hp-slots-display"></div>
+                            </div>
+
+                            <div class="resource-track">
+                                <div class="resource-header-row">
+                                    <label>PF</label>
+                                    <div class="max-input-wrapper">
+                                        <span>Máx:</span>
+                                        <input type="number" id="char-stress-max" value="6">
+                                    </div>
+                                </div>
+                                <div class="slots-container stress-slots" id="stress-slots-display"></div>
                             </div>
                         </div>
-                        <div class="slots-container stress-slots" id="stress-slots-display"></div>
                     </div>
                 </div>
-            </div>
 
-            <div id="class-description-box" class="lore-box hidden"></div>
-        </section>
+                <div id="tab-equip" class="sheet-tab-content">
+                    <div class="equipment-layout">
+                        
+                        <div class="prof-row">
+                            <div class="form-group proficiency-box">
+                                <label>Proficiência</label>
+                                <input type="number" id="char-proficiency" value="1" min="1">
+                            </div>
+                        </div>
 
-        <hr class="divider">
+                        <div class="equip-card">
+                            <h4 class="equip-title">Arma Primária</h4>
+                            <div class="equip-row-inputs">
+                                <input type="text" id="equip-p-name" class="equip-input-name" placeholder="Nome da Arma">
+                                <input type="text" id="equip-p-attr" class="equip-input-small" placeholder="Atributo">
+                                <input type="text" id="equip-p-range" class="equip-input-small" placeholder="Alcance">
+                                <input type="text" id="equip-p-dmg" class="equip-input-small" placeholder="Dano">
+                            </div>
+                            <div class="equip-row-full">
+                                <input type="text" id="equip-p-traits" placeholder="Habilidades / Características">
+                            </div>
+                        </div>
 
-        <section id="deckbuilder-section" class="panel hidden">
-            <div class="deck-area active-area">
-                <div class="area-header">
-                    <h2>Ativas</h2>
-                    <span class="count" id="active-count">0</span>
+                        <div class="equip-card">
+                            <h4 class="equip-title">Arma Secundária</h4>
+                            <div class="equip-row-inputs">
+                                <input type="text" id="equip-s-name" class="equip-input-name" placeholder="Nome da Arma">
+                                <input type="text" id="equip-s-attr" class="equip-input-small" placeholder="Atributo">
+                                <input type="text" id="equip-s-range" class="equip-input-small" placeholder="Alcance">
+                                <input type="text" id="equip-s-dmg" class="equip-input-small" placeholder="Dano">
+                            </div>
+                            <div class="equip-row-full">
+                                <input type="text" id="equip-s-traits" placeholder="Habilidades / Características">
+                            </div>
+                        </div>
+
+                        <div class="equip-card">
+                            <h4 class="equip-title">Armadura</h4>
+                            <div class="equip-row-inputs">
+                                <input type="text" id="equip-a-name" class="equip-input-name" placeholder="Nome da Armadura">
+                                <input type="text" id="equip-a-base" class="equip-input-small" placeholder="Base">
+                                <input type="text" id="equip-a-thresholds" class="equip-input-wide" placeholder="Limiares (ex: 5 / 10 / 15)">
+                            </div>
+                            <div class="equip-row-full">
+                                <input type="text" id="equip-a-traits" placeholder="Habilidades / Características">
+                            </div>
+                        </div>
+
+                        <div class="equip-grid-bottom">
+                            <div class="form-group">
+                                <label>Inventário / Itens</label>
+                                <textarea id="equip-inventory" rows="8"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Anotações & Ouro</label>
+                                <textarea id="equip-notes" rows="8" placeholder="Dinheiro, notas de campanha, NPCs..."></textarea>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="active-cards-container" class="cards-grid"></div>
-            </div>
 
-            <div class="deck-area reserve-area">
-                <div class="area-header">
-                    <h2>Reserva</h2>
-                    <span class="count" id="reserve-count">0</span>
+                <div id="tab-deck" class="sheet-tab-content">
+                    <section id="deckbuilder-section">
+                        <div class="deck-area active-area">
+                            <div class="area-header">
+                                <h2>Ativas</h2>
+                                <span class="count" id="active-count">0</span>
+                            </div>
+                            <div id="active-cards-container" class="cards-grid"></div>
+                        </div>
+
+                        <div class="deck-area reserve-area">
+                            <div class="area-header">
+                                <h2>Reserva</h2>
+                                <span class="count" id="reserve-count">0</span>
+                            </div>
+                            <div id="reserve-cards-container" class="cards-grid"></div>
+                        </div>
+
+                        <div class="library-control">
+                            <button id="btn-open-library" class="btn-primary">Adicionar Cartas</button>
+                        </div>
+                    </section>
                 </div>
-                <div id="reserve-cards-container" class="cards-grid"></div>
-            </div>
-
-            <div class="library-control">
-                <button id="btn-open-library" class="btn-primary">Adicionar Cartas</button>
             </div>
         </section>
 

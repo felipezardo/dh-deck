@@ -276,23 +276,20 @@ const classDescriptions = {
 // ==========================================
 // 2. ELEMENTOS E ESTADO
 // ==========================================
-const STORAGE_KEY = 'daggerheart_manager_v9_full';
+const STORAGE_KEY = 'daggerheart_manager_v11_tabs_equip';
 let characters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let activeCharId = null;
 
-// Referências DOM
+// Referências DOM Principais
 const elTabs = document.getElementById('char-tabs');
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
-// Dropdown personalizado:
 const elDropdownContainer = document.getElementById('subclass-dropdown'); 
-const elDropdownDisplay = document.getElementById('subclass-display');   
-const elDropdownOptions = document.getElementById('subclass-options');   
-
+const elDropdownDisplay = document.getElementById('subclass-display');    
+const elDropdownOptions = document.getElementById('subclass-options');    
 const elAncestry = document.getElementById('char-ancestry');
 const elCommunity = document.getElementById('char-community');
 const elTransformation = document.getElementById('char-transformation');
-const elDeckSection = document.getElementById('deckbuilder-section');
 const elDescription = document.getElementById('class-description-box');
 
 // ==========================================
@@ -306,6 +303,7 @@ function init() {
 
     loadSelectOptions();
     renderTabs();
+    setupSheetTabs(); // INICIA AS ABAS INTERNAS
     
     if (characters.length > 0) {
         selectCharacter(characters[0].id);
@@ -336,7 +334,6 @@ function loadSelectOptions() {
         });
     }
     // Transformações
-    const elTransformation = document.getElementById('char-transformation');
     if(elTransformation && fullData.Transformacoes) {
         elTransformation.innerHTML = '<option value="">Nenhuma</option>';
         fullData.Transformacoes.forEach(t => {
@@ -349,22 +346,31 @@ function loadSelectOptions() {
 // 4. LÓGICA DE PERSONAGEM
 // ==========================================
 function createNewCharacter() {
+    const defaultInventory = "uma tocha, 15m de corda, suprimentos,\nbásicos e um punhado de ouro. E uma Poção de Vida Menor OU\numa Poção de Vigor Menor";
+
     const newChar = {
         id: Date.now(),
         name: '', class: '', subclass: [], ancestry: '', community: '', transformation: '',
         stats: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 },
         
-        // ESTRUTURA DE COMBATE
         combat: {
-            evasion: 10,
-            armorValue: 0,      // Número no Input
-            armorMarks: [],     // Array de booleanos para os slots
+            evasion: 10, armorValue: 0, armorMarks: [],
             thresholds: { major: 0, severe: 0 },
-            hopeMarks: [],      // Slots de Esperança
-            hpMax: 6,
-            hpMarks: [],        // Slots de Dano
-            stressMax: 6,
-            stressMarks: []     // Slots de Estresse
+            hopeMarks: [], hpMax: 6, hpMarks: [], stressMax: 6, stressMarks: []
+        },
+
+        // NOVO OBJETO DE EQUIPAMENTO COMPLETO
+        equipment: {
+            proficiency: 1,
+            // Arma Primária
+            primary: { name: '', attr: '', range: '', dmg: '', traits: '' },
+            // Arma Secundária
+            secondary: { name: '', attr: '', range: '', dmg: '', traits: '' },
+            // Armadura
+            armor: { name: '', base: '', thresholds: '', traits: '' },
+            // Inventário
+            inventory: defaultInventory,
+            notes: ''
         },
 
         deck: [],
@@ -385,8 +391,7 @@ function selectCharacter(id) {
     elClass.value = char.class || '';
     elAncestry.value = char.ancestry || '';
     elCommunity.value = char.community || '';
-    const elTrans = document.getElementById('char-transformation');
-    if(elTrans) elTrans.value = char.transformation || '';
+    if(elTransformation) elTransformation.value = char.transformation || '';
 
     // Atributos
     const s = char.stats || { agility:0, strength:0, finesse:0, instinct:0, presence:0, knowledge:0 };
@@ -397,207 +402,81 @@ function selectCharacter(id) {
     document.getElementById('stat-presence').value = s.presence;
     document.getElementById('stat-knowledge').value = s.knowledge;
 
-    // --- COMBATE (GARANTIA DE CARREGAMENTO) ---
-    // Se faltar dados no save antigo, usa padrão
-    const c = char.combat || { 
-        evasion: 10, armorValue: 0, armorMarks: [], 
-        thresholds: { major:0, severe:0 }, hopeMarks: [], 
-        hpMax: 6, hpMarks: [], stressMax: 6, stressMarks: [] 
-    };
-
+    // Combate
+    const c = char.combat || { evasion: 10, armorValue: 0, armorMarks: [], thresholds: { major:0, severe:0 }, hopeMarks: [], hpMax: 6, hpMarks: [], stressMax: 6, stressMarks: [] };
     document.getElementById('char-evasion').value = c.evasion;
-    
-    // Armadura
     document.getElementById('char-armor-value').value = c.armorValue;
     renderResourceSlots('armor-slots-display', c.armorValue, c.armorMarks);
-
-    // Limiares
     document.getElementById('thresh-major-val').value = c.thresholds.major;
     document.getElementById('thresh-severe-val').value = c.thresholds.severe;
-
-    // Esperança (Sempre 6)
     renderResourceSlots('hope-slots-display', 6, c.hopeMarks);
-
-    // PV
     document.getElementById('char-hp-max').value = c.hpMax;
     renderResourceSlots('hp-slots-display', c.hpMax, c.hpMarks);
-
-    // Estresse
     document.getElementById('char-stress-max').value = c.stressMax;
     renderResourceSlots('stress-slots-display', c.stressMax, c.stressMarks);
-    // --------------------------------------------
 
+    // --- CARREGAR EQUIPAMENTO (ESTRUTURA DETALHADA) ---
+    // Garante que o objeto existe, senão cria vazio
+    const e = char.equipment || { 
+        proficiency: 1, 
+        primary: { name: '', attr: '', range: '', dmg: '', traits: '' },
+        secondary: { name: '', attr: '', range: '', dmg: '', traits: '' },
+        armor: { name: '', base: '', thresholds: '', traits: '' },
+        inventory: '', 
+        notes: '' 
+    };
+
+    // Proficiência
+    document.getElementById('char-proficiency').value = e.proficiency || 1;
+
+    // Arma Primária
+    const p = e.primary || {};
+    document.getElementById('equip-p-name').value = p.name || '';
+    document.getElementById('equip-p-attr').value = p.attr || '';
+    document.getElementById('equip-p-range').value = p.range || '';
+    document.getElementById('equip-p-dmg').value = p.dmg || '';
+    document.getElementById('equip-p-traits').value = p.traits || '';
+
+    // Arma Secundária
+    const sec = e.secondary || {};
+    document.getElementById('equip-s-name').value = sec.name || '';
+    document.getElementById('equip-s-attr').value = sec.attr || '';
+    document.getElementById('equip-s-range').value = sec.range || '';
+    document.getElementById('equip-s-dmg').value = sec.dmg || '';
+    document.getElementById('equip-s-traits').value = sec.traits || '';
+
+    // Armadura
+    const arm = e.armor || {};
+    document.getElementById('equip-a-name').value = arm.name || '';
+    document.getElementById('equip-a-base').value = arm.base || '';
+    document.getElementById('equip-a-thresholds').value = arm.thresholds || '';
+    document.getElementById('equip-a-traits').value = arm.traits || '';
+
+    // Geral
+    document.getElementById('equip-inventory').value = e.inventory || '';
+    document.getElementById('equip-notes').value = e.notes || '';
+
+    // Subclasses e Cartas
     let selectedSubclasses = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     setupSubclassDropdown(char.class, selectedSubclasses);
-    
     updateClassDescription(char.class);
     renderOriginCards(char);
     renderTabs();
     renderDeck();
-    
-    if (char.class) elDeckSection.classList.remove('hidden');
-    else elDeckSection.classList.add('hidden');
-}
-
-// --- FUNÇÃO AUXILIAR DE RENDERIZAÇÃO DE SLOTS ---
-function renderResourceSlots(containerId, count, marksArray = []) {
-    const container = document.getElementById(containerId);
-    if(!container) return;
-    container.innerHTML = '';
-
-    count = parseInt(count) || 0; // Segurança
-
-    for (let i = 0; i < count; i++) {
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'custom-checkbox';
-        
-        // Recupera estado salvo
-        if (marksArray[i] === true) {
-            checkbox.checked = true;
-        }
-
-        // Salva ao clicar
-        checkbox.addEventListener('change', saveCurrentChar);
-        container.appendChild(checkbox);
-    }
-}
-
-function updateClassDescription(className) {
-    if (!className || !classDescriptions[className]) {
-        elDescription.classList.add('hidden');
-        elDescription.innerHTML = '';
-        return;
-    }
-    elDescription.innerHTML = classDescriptions[className];
-    elDescription.classList.remove('hidden');
-}
-
-// ==========================================
-// 4.1 LÓGICA DO DROPDOWN DE SUBCLASSES
-// ==========================================
-
-function setupSubclassDropdown(className, selectedValues = []) {
-    elDropdownOptions.innerHTML = ''; 
-
-    if (!className) {
-        elDropdownDisplay.innerText = "Primeiro a Classe...";
-        return;
-    }
-
-    if (fullData['Sub-Classes']) {
-        const subs = fullData['Sub-Classes'].filter(s => s.nome.startsWith(className));
-        
-        if(subs.length === 0) {
-             elDropdownDisplay.innerText = "Nenhuma subclasse encontrada";
-        }
-
-        subs.forEach((sub) => {
-            const optionDiv = document.createElement('div');
-            optionDiv.className = 'option-item';
-            
-            const isChecked = selectedValues.includes(sub.nome);
-            if (isChecked) optionDiv.classList.add('selected');
-
-            optionDiv.innerHTML = `
-                <input type="checkbox" value="${sub.nome}" ${isChecked ? 'checked' : ''}>
-                <span>${sub.nome}</span>
-            `;
-
-            optionDiv.addEventListener('click', (e) => {
-                e.stopPropagation(); 
-
-                const checkbox = optionDiv.querySelector('input');
-                const newState = !checkbox.checked; 
-                checkbox.checked = newState;
-                
-                if (newState) {
-                    optionDiv.classList.add('selected');
-                } else {
-                    optionDiv.classList.remove('selected');
-                }
-                
-                saveCurrentChar(); 
-            });
-
-            elDropdownOptions.appendChild(optionDiv);
-        });
-    }
-    
-    updateSubclassDisplay(selectedValues);
-}
-
-function updateSubclassDisplay(selectedValues) {
-    if (!selectedValues || selectedValues.length === 0) {
-        elDropdownDisplay.innerText = "Selecione...";
-        return;
-    }
-    const displayNames = selectedValues.map(val => {
-        const parts = val.split(':');
-        return parts.length > 1 ? parts[1].trim() : val;
-    });
-    
-    elDropdownDisplay.innerText = displayNames.join(', ');
-}
-
-window.addEventListener('click', (e) => {
-    if (elDropdownContainer && !elDropdownContainer.contains(e.target)) {
-        elDropdownOptions.classList.add('hidden');
-    }
-});
-
-if (elDropdownDisplay) {
-    elDropdownDisplay.addEventListener('click', (e) => {
-        const char = characters.find(c => c.id === activeCharId);
-        if (char && char.class) {
-            elDropdownOptions.classList.toggle('hidden');
-        }
-    });
-}
-
-// ==========================================
-// 5. RENDERIZAÇÃO DAS CARTAS (ORIGEM E DECK)
-// ==========================================
-
-function renderOriginCards(char) {
-    const container = document.getElementById('origin-cards-container');
-    container.innerHTML = '';
-
-    const addStaticCard = (category, itemName) => {
-        if (!itemName || !fullData[category]) return;
-        const item = fullData[category].find(i => i.nome === itemName);
-        if (item) {
-            const div = document.createElement('div');
-            div.className = 'rpg-card static-card';
-            div.innerHTML = `<img src="images/${item.img}" alt="${itemName}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(itemName)}'">`;
-            container.appendChild(div);
-        }
-    };
-
-    // ORDEM INVERTIDA (Comunidade -> Ancestralidade -> Subclasse)
-    addStaticCard('Comunidades', char.community);
-    addStaticCard('Ancestralidades', char.ancestry);
-
-    if (char.transformation) {
-        addStaticCard('Transformacoes', char.transformation);
-    }
-
-    let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
-    subs.forEach(subName => addStaticCard('Sub-Classes', subName));
 }
 
 function saveCurrentChar() {
     const char = characters.find(c => c.id === activeCharId);
     if (!char) return;
 
+    // Básicos
     char.name = elName.value;
     char.class = elClass.value;
     char.ancestry = elAncestry.value;
     char.community = elCommunity.value;
-    const elTrans = document.getElementById('char-transformation');
-    if(elTrans) char.transformation = elTrans.value;
+    if(elTransformation) char.transformation = elTransformation.value;
 
-    // Dropdown
+    // Subclasses
     const checkboxes = elDropdownOptions.querySelectorAll('input[type="checkbox"]:checked');
     const selectedValues = Array.from(checkboxes).map(cb => cb.value);
     char.subclass = selectedValues;
@@ -613,7 +492,7 @@ function saveCurrentChar() {
         knowledge: document.getElementById('stat-knowledge').value
     };
 
-    // --- COLETA DE COMBATE ---
+    // Combate
     const getMarksFromContainer = (containerId) => {
         const container = document.getElementById(containerId);
         if (!container) return [];
@@ -636,15 +515,139 @@ function saveCurrentChar() {
         stressMarks: getMarksFromContainer('stress-slots-display')
     };
 
+    // --- SALVAR EQUIPAMENTO DETALHADO ---
+    char.equipment = {
+        proficiency: document.getElementById('char-proficiency').value,
+        primary: {
+            name: document.getElementById('equip-p-name').value,
+            attr: document.getElementById('equip-p-attr').value,
+            range: document.getElementById('equip-p-range').value,
+            dmg: document.getElementById('equip-p-dmg').value,
+            traits: document.getElementById('equip-p-traits').value
+        },
+        secondary: {
+            name: document.getElementById('equip-s-name').value,
+            attr: document.getElementById('equip-s-attr').value,
+            range: document.getElementById('equip-s-range').value,
+            dmg: document.getElementById('equip-s-dmg').value,
+            traits: document.getElementById('equip-s-traits').value
+        },
+        armor: {
+            name: document.getElementById('equip-a-name').value,
+            base: document.getElementById('equip-a-base').value,
+            thresholds: document.getElementById('equip-a-thresholds').value,
+            traits: document.getElementById('equip-a-traits').value
+        },
+        inventory: document.getElementById('equip-inventory').value,
+        notes: document.getElementById('equip-notes').value
+    };
+
     saveToStorage();
     renderTabs();
     renderOriginCards(char);
 }
 
+// ... (renderResourceSlots, updateClassDescription, dropdown logic, deckbuilder, etc - MANTIDOS IGUAIS) ...
+function renderResourceSlots(containerId, count, marksArray = []) {
+    const container = document.getElementById(containerId);
+    if(!container) return;
+    container.innerHTML = '';
+    count = parseInt(count) || 0;
+    for (let i = 0; i < count; i++) {
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.className = 'custom-checkbox';
+        if (marksArray[i] === true) checkbox.checked = true;
+        checkbox.addEventListener('change', saveCurrentChar);
+        container.appendChild(checkbox);
+    }
+}
+
+function updateClassDescription(className) {
+    if (!className || !classDescriptions[className]) {
+        elDescription.classList.add('hidden');
+        elDescription.innerHTML = '';
+        return;
+    }
+    elDescription.innerHTML = classDescriptions[className];
+    elDescription.classList.remove('hidden');
+}
+
+function setupSubclassDropdown(className, selectedValues = []) {
+    elDropdownOptions.innerHTML = ''; 
+    if (!className) {
+        elDropdownDisplay.innerText = "Primeiro a Classe...";
+        return;
+    }
+    if (fullData['Sub-Classes']) {
+        const subs = fullData['Sub-Classes'].filter(s => s.nome.startsWith(className));
+        if(subs.length === 0) elDropdownDisplay.innerText = "Nenhuma subclasse encontrada";
+        subs.forEach((sub) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            const isChecked = selectedValues.includes(sub.nome);
+            if (isChecked) optionDiv.classList.add('selected');
+            optionDiv.innerHTML = `<input type="checkbox" value="${sub.nome}" ${isChecked ? 'checked' : ''}><span>${sub.nome}</span>`;
+            optionDiv.addEventListener('click', (e) => {
+                e.stopPropagation(); 
+                const checkbox = optionDiv.querySelector('input');
+                const newState = !checkbox.checked; 
+                checkbox.checked = newState;
+                if (newState) optionDiv.classList.add('selected'); else optionDiv.classList.remove('selected');
+                saveCurrentChar(); 
+            });
+            elDropdownOptions.appendChild(optionDiv);
+        });
+    }
+    updateSubclassDisplay(selectedValues);
+}
+
+function updateSubclassDisplay(selectedValues) {
+    if (!selectedValues || selectedValues.length === 0) {
+        elDropdownDisplay.innerText = "Selecione...";
+        return;
+    }
+    const displayNames = selectedValues.map(val => {
+        const parts = val.split(':');
+        return parts.length > 1 ? parts[1].trim() : val;
+    });
+    elDropdownDisplay.innerText = displayNames.join(', ');
+}
+
+window.addEventListener('click', (e) => {
+    if (elDropdownContainer && !elDropdownContainer.contains(e.target)) elDropdownOptions.classList.add('hidden');
+});
+
+if (elDropdownDisplay) {
+    elDropdownDisplay.addEventListener('click', (e) => {
+        const char = characters.find(c => c.id === activeCharId);
+        if (char && char.class) elDropdownOptions.classList.toggle('hidden');
+    });
+}
+
+function renderOriginCards(char) {
+    const container = document.getElementById('origin-cards-container');
+    container.innerHTML = '';
+    const addStaticCard = (category, itemName) => {
+        if (!itemName || !fullData[category]) return;
+        const item = fullData[category].find(i => i.nome === itemName);
+        if (item) {
+            const div = document.createElement('div');
+            div.className = 'rpg-card static-card';
+            div.innerHTML = `<img src="images/${item.img}" alt="${itemName}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(itemName)}'">`;
+            container.appendChild(div);
+        }
+    };
+    addStaticCard('Comunidades', char.community);
+    addStaticCard('Ancestralidades', char.ancestry);
+    if (char.transformation) addStaticCard('Transformacoes', char.transformation);
+    let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
+    subs.forEach(subName => addStaticCard('Sub-Classes', subName));
+}
+
 function renderTabs() {
     const btnAdd = document.getElementById('btn-new-char');
     elTabs.innerHTML = '';
-    
     characters.forEach(char => {
         const btn = document.createElement('button');
         btn.className = `tab-btn ${char.id === activeCharId ? 'active' : ''}`;
@@ -652,7 +655,6 @@ function renderTabs() {
         btn.onclick = () => selectCharacter(char.id);
         elTabs.appendChild(btn);
     });
-
     elTabs.appendChild(btnAdd);
 }
 
@@ -660,21 +662,14 @@ function saveToStorage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(characters));
 }
 
-// ==========================================
-// 6. DECKBUILDER (LÓGICA)
-// ==========================================
-
 function renderDeck() {
     const char = characters.find(c => c.id === activeCharId);
     const containerActive = document.getElementById('active-cards-container');
     const containerReserve = document.getElementById('reserve-cards-container');
-    
     containerActive.innerHTML = '';
     containerReserve.innerHTML = '';
-
     let activeCount = 0;
     let reserveCount = 0;
-
     if(char.deck) {
         char.deck.forEach((card, index) => {
             const cardEl = createDeckCard(card, index);
@@ -687,7 +682,6 @@ function renderDeck() {
             }
         });
     }
-
     document.getElementById('active-count').innerText = activeCount;
     document.getElementById('reserve-count').innerText = reserveCount;
 }
@@ -695,22 +689,13 @@ function renderDeck() {
 function createDeckCard(card, index) {
     const div = document.createElement('div');
     div.className = 'rpg-card';
-    
     const iconDown = `<svg viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41z"/></svg>`;
     const iconUp = `<svg viewBox="0 0 24 24"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6 1.41 1.41z"/></svg>`;
     const iconTrash = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
-
     const moveBtn = card.status === 'active' 
         ? `<button onclick="moveCard(${index}, 'reserve')" title="Mover para Mochila">${iconDown}</button>`
         : `<button onclick="moveCard(${index}, 'active')" title="Equipar na Mão">${iconUp}</button>`;
-
-    div.innerHTML = `
-        <img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(card.name)}'">
-        <div class="card-actions">
-            ${moveBtn}
-            <button class="btn-trash" onclick="removeCard(${index})" title="Remover do Grimório">${iconTrash}</button>
-        </div>
-    `;
+    div.innerHTML = `<img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(card.name)}'"><div class="card-actions">${moveBtn}<button class="btn-trash" onclick="removeCard(${index})" title="Remover do Grimório">${iconTrash}</button></div>`;
     return div;
 }
 
@@ -732,84 +717,73 @@ function removeCard(index) {
 
 function openLibrary() {
     const char = characters.find(c => c.id === activeCharId);
-    if (!char.class) {
-        alert("Selecione uma classe primeiro!");
-        return;
-    }
-
+    if (!char.class) { alert("Selecione uma classe primeiro!"); return; }
     const domains = classDomains[char.class];
     const maxLevel = document.getElementById('filter-level').value;
     const listEl = document.getElementById('library-list');
-    
     listEl.innerHTML = '';
-
     domains.forEach(domainKey => {
         if (fullData[domainKey]) {
             const cards = fullData[domainKey].filter(c => c.nivel <= maxLevel);
-            
             cards.forEach(c => {
                 const isOwned = char.deck.some(d => d.name === c.nome);
                 const item = document.createElement('div');
-                
                 item.className = `rpg-card ${isOwned ? 'card-owned' : ''}`;
                 item.style.cursor = 'pointer'; 
-                
                 item.innerHTML = `<img src="images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(c.nome)}'">`;
-                
-                if (isOwned) {
-                    item.title = "Clique para Remover";
-                    item.onclick = () => toggleCardInDeck(c, domainKey, true);
-                } else {
-                    item.title = "Clique para Adicionar";
-                    item.onclick = () => toggleCardInDeck(c, domainKey, false);
-                }
-
+                if (isOwned) { item.title = "Clique para Remover"; item.onclick = () => toggleCardInDeck(c, domainKey, true); } 
+                else { item.title = "Clique para Adicionar"; item.onclick = () => toggleCardInDeck(c, domainKey, false); }
                 listEl.appendChild(item);
             });
         }
     });
-
     document.getElementById('library-modal').showModal();
 }
 
 function toggleCardInDeck(cardData, domainName, shouldRemove) {
     const char = characters.find(c => c.id === activeCharId);
-    
     if (shouldRemove) {
         char.deck = char.deck.filter(c => c.name !== cardData.nome);
     } else {
         if (char.deck.some(c => c.name === cardData.nome)) return;
-        
-        char.deck.push({
-            name: cardData.nome, 
-            img: cardData.img, 
-            level: cardData.nivel, 
-            domain: domainName, 
-            status: 'active'
-        });
+        char.deck.push({ name: cardData.nome, img: cardData.img, level: cardData.nivel, domain: domainName, status: 'active' });
     }
-
     saveToStorage();
     renderDeck();
     openLibrary(); 
 }
 
 // ==========================================
-// 7. EVENT LISTENERS
+// 7. LÓGICA DAS ABAS INTERNAS (NOVO)
 // ==========================================
+function setupSheetTabs() {
+    const buttons = document.querySelectorAll('.sheet-tab-btn');
+    const contents = document.querySelectorAll('.sheet-tab-content');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // Remove active de todos
+            buttons.forEach(b => b.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+
+            // Ativa o clicado
+            btn.classList.add('active');
+            const targetId = btn.getAttribute('data-target');
+            document.getElementById(targetId).classList.add('active');
+        });
+    });
+}
 
 function setupEventListeners() {
     document.getElementById('btn-new-char').addEventListener('click', createNewCharacter);
     
-    // Inputs Gerais
-    const inputs = document.querySelectorAll('input:not(.custom-checkbox), select');
+    // Inputs Gerais (INCLUINDO OS TEXTAREAS)
+    const inputs = document.querySelectorAll('input:not(.custom-checkbox), select, textarea');
     inputs.forEach(input => {
         input.addEventListener('change', (e) => {
-            // Se mudou um valor que define quantidade de slots (Armadura, HP, Stress)
-            // Precisamos salvar E redesenhar os slots
             if (['char-armor-value', 'char-hp-max', 'char-stress-max'].includes(e.target.id)) {
                 saveCurrentChar();
-                selectCharacter(activeCharId); // Força redesenho
+                selectCharacter(activeCharId); 
             } else {
                 saveCurrentChar();
             }
@@ -818,53 +792,27 @@ function setupEventListeners() {
 
     elClass.addEventListener('change', (e) => {
         const className = e.target.value;
-        
-        // Auto-preencher Stats se for uma nova classe
         if (classBaseStats[className]) {
             document.getElementById('char-evasion').value = classBaseStats[className].evasion;
             document.getElementById('char-hp-max').value = classBaseStats[className].hp;
-            
-            // Salva e recarrega para mostrar os slots de HP corretos
             saveCurrentChar();
             selectCharacter(activeCharId);
         }
-        
         setupSubclassDropdown(className, []);
         updateClassDescription(className);
-        
-        if (className) {
-            elDeckSection.classList.remove('hidden');
-        } else {
-            elDeckSection.classList.add('hidden');
-        }
     });
 
-    document.getElementById('btn-delete-char').addEventListener('click', () => {
-        document.getElementById('confirm-modal').showModal();
-    });
-
+    document.getElementById('btn-delete-char').addEventListener('click', () => document.getElementById('confirm-modal').showModal());
     document.getElementById('confirm-yes').addEventListener('click', () => {
         characters = characters.filter(c => c.id !== activeCharId);
         saveToStorage();
-        
-        if (characters.length > 0) {
-            selectCharacter(characters[0].id);
-        } else {
-            createNewCharacter();
-        }
+        if (characters.length > 0) selectCharacter(characters[0].id); else createNewCharacter();
         document.getElementById('confirm-modal').close();
     });
-
-    document.getElementById('confirm-no').addEventListener('click', () => {
-        document.getElementById('confirm-modal').close();
-    });
-
+    document.getElementById('confirm-no').addEventListener('click', () => document.getElementById('confirm-modal').close());
     document.getElementById('btn-open-library').addEventListener('click', openLibrary);
-    document.getElementById('close-library').addEventListener('click', () => {
-        document.getElementById('library-modal').close();
-    });
+    document.getElementById('close-library').addEventListener('click', () => document.getElementById('library-modal').close());
     document.getElementById('filter-level').addEventListener('change', openLibrary);
 }
 
-// INICIAR APP
 document.addEventListener('DOMContentLoaded', init);

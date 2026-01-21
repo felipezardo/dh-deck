@@ -26,7 +26,7 @@ const classBaseStats = {
     'Feiticeiro': { evasion: 10, hp: 6 },
     'Guerreiro': { evasion: 11, hp: 6 },
     'Mago': { evasion: 11, hp: 5 },
-    'BloodHunter': { evasion: 10, hp: 6 },
+    'BloodHunter': { evasion: 9, hp: 7 },
     'Pugilista': { evasion: 10, hp: 6 }
 };
 

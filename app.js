@@ -456,7 +456,7 @@ d10+3 fís | Duas mãos</p>
         </div>
          <div class="ability-block">
             <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
-            <p>Quarterstaff - Instinct Melee - d10+3 phy - Two-Handed</p>
+            <p>Bordão - Instinto Corpo a Corpo - d10+3 fís - Duas mões</p>
         </div>
          
         <div class="ability-block">

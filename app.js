@@ -226,7 +226,7 @@ Par: sua arma principal causa +2 de dano em alvos CaC</p>
         <div class="ability-block">
             <div class="ability-title">ARMADURA SUGERIDA</div>            
             <p>Gibão | Limiares base 5/11 | Armadura base 3
-Flaxível: +1 em Evasão</p>
+Flexível: +1 em Evasão</p>
         </div>
     `,
     'Serafim': `
@@ -345,7 +345,7 @@ Flexível: +1 em Evasão</p>
          <div class="ability-block">
             <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
             <p>Espada longa | Agilidade corpo a corpo
-d8+3 fís | Duas mãos</p>
+d10+3 fís | Duas mãos</p>
         </div>
          
         <div class="ability-block">
@@ -394,8 +394,8 @@ descarte o de resultado mais baixo.</p>
     'BloodHunter': `
         <div class="class-stats-grid">
             <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Blood e Lâmina</span></div>
-            <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">10</span></div>
-            <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">6</span></div>
+            <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">9</span></div>
+            <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">7</span></div>
         </div>
         <div class="ability-block">
             <div class="ability-title">Habilidade de Esperança: Maldição de Sangue</div>

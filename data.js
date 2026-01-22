@@ -182,6 +182,21 @@ const fullData = {
     },
     {
       "nivel": 1,
+      "nome": "Serafim: XERIFE (Fundamental)",
+      "img": "XERIFE_fundamental.png"
+    },
+    {
+      "nivel": 5,
+      "nome": "Serafim: XERIFE (Especializacao)",
+      "img": "XERIFE_especializacao.png"
+    },
+    {
+      "nivel": 8,
+      "nome": "Serafim: XERIFE (Maestria)",
+      "img": "XERIFE_maestria.png"
+    },
+    {
+      "nivel": 1,
       "nome": "Feiticeiro: Elementalista (Fundamental)",
       "img": "feiticeiro_elementalista_fundamental.jpg"
     },

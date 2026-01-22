@@ -239,6 +239,22 @@ const fullData = {
       "nivel": 8,
       "nome": "Guerreiro: Escolhido Da Matanca (Maestria)",
       "img": "guerreiro_escolhido-da-matanca_maestria.jpg"
+    }
+    ,
+    {
+      "nivel": 1,
+      "nome": "Guerreiro: O Pistoleiro (Fundamental)",
+      "img": "O PISTOLEIRO_fundamental.png"
+    } ,
+    {
+      "nivel": 1,
+      "nome": "Guerreiro: O Pistoleiro (Especializacao)",
+      "img": "O PISTOLEIRO_especializacao.png"
+    } ,
+    {
+      "nivel": 1,
+      "nome": "Guerreiro: O Pistoleiro (Maestria)",
+      "img": "O PISTOLEIRO_maestria.png"
     },
     {
       "nivel": 1,

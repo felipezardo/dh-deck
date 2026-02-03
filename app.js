@@ -1,3 +1,8 @@
+//consumindo api//
+const API_BASE_URL = "https://api-daggersheets.onrender.com";
+let fullData = {}; // Começa vazio
+
+
 // ==========================================
 // 1. DADOS ESTÁTICOS (TEXTOS E REGRAS)
 // ==========================================
@@ -488,23 +493,35 @@ const elDescription = document.getElementById('class-description-box');
 // ==========================================
 // 3. INICIALIZAÇÃO
 // ==========================================
-function init() {
-    if (typeof fullData === 'undefined') {
-        alert("ERRO: 'data.js' não encontrado.");
-        return;
-    }
+async function init() {
+    try {
+        console.log("Conectando à API Daggersheets...");
+        
+        // 1. Busca os dados da sua API
+        const response = await fetch(`${API_BASE_URL}/api`);
+        
+        if (!response.ok) throw new Error("Erro ao carregar dados da API");
+        
+        fullData = await response.json();
+        console.log("Dados carregados com sucesso!", fullData);
 
-    loadSelectOptions();
-    renderTabs();
-    setupSheetTabs(); // INICIA AS ABAS INTERNAS
-    
-    if (characters.length > 0) {
-        selectCharacter(characters[0].id);
-    } else {
-        createNewCharacter();
+        // 2. Agora que temos os dados, iniciamos o resto
+        loadSelectOptions();
+        renderTabs();
+        setupSheetTabs();
+        
+        if (characters.length > 0) {
+            selectCharacter(characters[0].id);
+        } else {
+            createNewCharacter();
+        }
+        
+        setupEventListeners();
+
+    } catch (error) {
+        console.error("Falha na inicialização:", error);
+        alert("Erro ao conectar com o servidor. Verifique sua internet ou se a API está acordada.");
     }
-    
-    setupEventListeners();
 }
 
 function loadSelectOptions() {
@@ -827,7 +844,7 @@ function renderOriginCards(char) {
         if (item) {
             const div = document.createElement('div');
             div.className = 'rpg-card static-card';
-            div.innerHTML = `<img src="images/${item.img}" alt="${itemName}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(itemName)}'">`;
+            div.innerHTML = `<img src="${API_BASE_URL}/images/${item.img}" alt="${itemName}" onerror="this.src='https://placehold.co/220x320/333/c0a062?text=${encodeURIComponent(itemName)}'">`;
             container.appendChild(div);
         }
     };
@@ -888,7 +905,7 @@ function createDeckCard(card, index) {
     const moveBtn = card.status === 'active' 
         ? `<button onclick="moveCard(${index}, 'reserve')" title="Mover para Mochila">${iconDown}</button>`
         : `<button onclick="moveCard(${index}, 'active')" title="Equipar na Mão">${iconUp}</button>`;
-    div.innerHTML = `<img src="images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(card.name)}'"><div class="card-actions">${moveBtn}<button class="btn-trash" onclick="removeCard(${index})" title="Remover do Grimório">${iconTrash}</button></div>`;
+    div.innerHTML = `<img src="${API_BASE_URL}/images/${card.img}" alt="${card.name}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(card.name)}'"><div class="card-actions">${moveBtn}<button class="btn-trash" onclick="removeCard(${index})" title="Remover do Grimório">${iconTrash}</button></div>`;
     return div;
 }
 
@@ -923,7 +940,7 @@ function openLibrary() {
                 const item = document.createElement('div');
                 item.className = `rpg-card ${isOwned ? 'card-owned' : ''}`;
                 item.style.cursor = 'pointer'; 
-                item.innerHTML = `<img src="images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(c.nome)}'">`;
+                item.innerHTML = `<img src="${API_BASE_URL}/images/${c.img}" alt="${c.nome}" onerror="this.src='https://placehold.co/400x600/2a2a2a/c0a062?text=${encodeURIComponent(c.nome)}'">`;
                 if (isOwned) { item.title = "Clique para Remover"; item.onclick = () => toggleCardInDeck(c, domainKey, true); } 
                 else { item.title = "Clique para Adicionar"; item.onclick = () => toggleCardInDeck(c, domainKey, false); }
                 listEl.appendChild(item);

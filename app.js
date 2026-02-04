@@ -17,7 +17,8 @@ const classDomains = {
     'Guerreiro': ['Lâmina', 'Falange'],
     'Mago': ['Códice', 'Esplendor'],
     'BloodHunter': ['Blood', 'Lâmina'],
-    'Pugilista': ['Valor', 'Falange']
+    'Pugilista': ['Valor', 'Falange'],
+    'Assassino': ['Lâmina', 'Meia-Noite']
 };
 
 // Estatísticas Base (Vida e Evasão por classe)
@@ -32,7 +33,8 @@ const classBaseStats = {
     'Guerreiro': { evasion: 11, hp: 6 },
     'Mago': { evasion: 11, hp: 5 },
     'BloodHunter': { evasion: 9, hp: 7 },
-    'Pugilista': { evasion: 10, hp: 6 }
+    'Pugilista': { evasion: 10, hp: 6 },
+    'Assassino': { evasion: 12, hp: 5 }
 };
 
 // Textos do PDF Completos
@@ -462,6 +464,44 @@ d10+3 fís | Duas mãos</p>
          <div class="ability-block">
             <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
             <p>Bordão - Instinto Corpo a Corpo - d10+3 fís - Duas mões</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
+        </div>
+    `,
+    'Assassino': `
+        <div class="class-stats-grid">
+            <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Lâmina e Meia-noite</span></div>
+            <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">12</span></div>
+            <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">5</span></div>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Esperança: Determinação Sombria</div>
+            <p>Gaste 3 de Esperança para limpar 2PF.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Classe: MARCADO PARA A MORTE</div>
+            <p>Em um ataque com arma bem-sucedido, você pode marcar uma Fadiga para deixar o alvo Marcado para a Morte. Ataques que você realizar contra um alvo que esteja Marcado para a Morte ganham um bônus no dano igual a +1d4 por nível. Você só pode ter um adversário Marcado para a Morte por vez, e não pode transferir ou remover a condição, exceto ao derrotar o alvo. O Mestre pode gastar uma quantidade de Medo igual à sua Proficiência para remover a condição de Marcado para a Morte. Caso contrário, ela termina automaticamente quando você realizar um descanso.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ENTRAR E SAIR</div>
+            <p>Gaste uma Esperança para perguntar ao Mestre por uma maneira rápida ou discreta de entrar ou sair de um prédio ou estrutura que você possa ver.  O próximo teste que você realizar que aproveite esta informação terá Vantagem.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+2 Agilidade, -1 Força, +1 Acuidade, +0 Instinto, +0 Presença, +1 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Espada Larga: Agilidade, Corpo a corpo — d8 físico — Uma mão</p>
+            <p>Confiável: +1 para testes de ataque</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
+            <p>Espada Curta: Agilidade, Corpo a corpo — d8 físico — Uma mão</p>
+            <p>Par: +2 para o dano da arma primária contra alvos ao alcance Corpo a corpo</p>
         </div>
          
         <div class="ability-block">

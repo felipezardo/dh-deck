@@ -18,7 +18,9 @@ const classDomains = {
     'Mago': ['Códice', 'Esplendor'],
     'BloodHunter': ['Blood', 'Lâmina'],
     'Pugilista': ['Valor', 'Falange'],
-    'Assassino': ['Lâmina', 'Meia-Noite']
+    'Assassino': ['Lâmina', 'Meia-Noite'],
+    'Bruxa': ['Pavor', 'Sabedoria'],
+    'Warlock': ['Pavor', 'Meia-Noite']
 };
 
 // Estatísticas Base (Vida e Evasão por classe)
@@ -34,7 +36,9 @@ const classBaseStats = {
     'Mago': { evasion: 11, hp: 5 },
     'BloodHunter': { evasion: 9, hp: 7 },
     'Pugilista': { evasion: 10, hp: 6 },
-    'Assassino': { evasion: 12, hp: 5 }
+    'Assassino': { evasion: 12, hp: 5 },
+    'Bruxa': { evasion: 10, hp: 6 },
+    'Warlock': { evasion: 11, hp: 5 }
 };
 
 // Textos do PDF Completos
@@ -502,6 +506,82 @@ d10+3 fís | Duas mãos</p>
             <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
             <p>Espada Curta: Agilidade, Corpo a corpo — d8 físico — Uma mão</p>
             <p>Par: +2 para o dano da arma primária contra alvos ao alcance Corpo a corpo</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Armadura de couro | Limiares base 6/13 | Armadura base 3</p>
+        </div>
+    `,
+    'Bruxa': `
+        <div class="class-stats-grid">
+            <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Pavor e Sabedoria</span></div>
+            <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">10</span></div>
+            <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">6</span></div>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Esperança: Charme da Bruxa</div>
+            <p>Quando você ou um aliado ao alcance Distante rolar uma falha em um teste de ação, você pode gastar 3 de Esperança para transformá-la em um Sucesso com Medo.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Classe: AMALDIÇOAR</div>
+            <p>Quando uma criatura fizer você ou um aliado ao alcance Próximo marcar qualquer número de Pontos de Vida, você pode marcar uma Fadiga para Amaldiçoá-la. Testes de ação e rolagens de dano contra uma criatura Amaldiçoada ganham um bônus igual ao seu nível. Esta condição dura até que o Mestre gaste uma quantidade de Medo igual ao seu atributo de Conjuração para removê-la ou até que você Amaldiçoe outra criatura. Caso contrário, remova-a quando a cena terminar.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">COMUNGAR</div>
+            <p>Uma vez por descanso longo, durante um momento de calma, você pode comungar com um ancestral, divindade, espírito da natureza ou ser de outro mundo. Faça-lhes uma pergunta e, em seguida, role um número de d6s igual ao seu atributo de Conjuração. Escolha um valor dos resultados rolados e consulte a tabela abaixo para o efeito:</p>
+            <ul>
+            <li>1–3: Você sente um sabor, um cheiro ou uma sensação relevante para a resposta.</li>
+            <li>4–5: Você ouve sons ou vê uma visão relevante para a resposta.</li>
+            <li>6: Você experiencia psiquicamente uma cena relevante para a resposta como se estivesse lá.</li>
+            </ul>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+0 Agilidade,
+-1 Força,+0 Acuidade,+2 Instinto,+1 Presença,+1 Conhecimento</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Cajado grande | Conhecimento muito distante
+d6 mág | Duas mãos
+Poderoso: ao acertar um ataque, role +1 dado de dano e
+descarte o de resultado mais baixo.</p>
+        </div>
+         
+        <div class="ability-block">
+            <div class="ability-title">ARMADURA SUGERIDA</div>            
+            <p>Gibão | Limiares base 5/11 | Armadura base 3
+Flexível: +1 em Evasão</p>
+        </div>
+    `,
+    'Warlock': `
+        <div class="class-stats-grid">
+            <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Pavor e Sabedoria</span></div>
+            <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">11</span></div>
+            <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">5</span></div>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Esperança: Benesse do Patrono</div>
+            <p>Gaste 3 de Esperança para clamar por ajuda ao seu patrono, ganhando 1d4 de Favor.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">Habilidade de Classe: PATRONO DO WARLOCK</div>
+            <p>Você se comprometeu com um patrono (deus, demônio, fada ou outra entidade sobrenatural) em troca de poder. Escolha suas esferas de influência (como Natureza e Travessura, Conhecimento e Sombra, etc.) e defina seus valores iniciais como +2. Antes de fazer um teste de ação relacionado a uma esfera, você pode gastar um Favor para somar o valor da esfera ao resultado.</p>
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">FAVOR</div>
+            <p>Você começa com 3 de Favor. Durante um descanso, você pode gastar um de seus movimentos de repouso para dar um dízimo ao seu patrono e ganhar Favor igual à sua Presença. Se optar por não fazer a oferenda, o Mestre ganha um Medo.</p>
+           
+        </div>
+        <div class="ability-block">
+            <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
+            <p>+1 Agilidade, -1 Força, 0 Acuidade, +1 Instinto, +2 Presença, 0 Conhecimento.</p>
+        </div>
+         <div class="ability-block">
+            <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
+            <p>Cetro | Presença  Distante d6 mág | Duas mãos</p>
+            <p>Versátil: também pode ser usada com estas estatísticas — Presença, corpo a corpo, d8</p>
         </div>
          
         <div class="ability-block">

@@ -567,11 +567,11 @@ Flexível: +1 em Evasão</p>
         </div>
         <div class="ability-block">
             <div class="ability-title">Habilidade de Classe: PATRONO DO WARLOCK</div>
-            <p>Você se comprometeu com um patrono (deus, demônio, fada ou outra entidade sobrenatural) em troca de poder. Escolha suas esferas de influência (como Natureza e Travessura, Conhecimento e Sombra, etc.) e defina seus valores iniciais como +2. Antes de fazer um teste de ação relacionado a uma esfera, você pode gastar um Favor para somar o valor da esfera ao resultado.</p>
+            <p>Você se comprometeu com um patrono (deus, demônio, fada ou outra entidade sobrenatural) em troca de poder. Escreva o nome dele acima. Então, escolha as esferas de influência dele, sob critério do Mestre (Natureza e Travessura, Amor e Guerra, Conhecimento e Sombra, etc.), registre-as abaixo e defina seus valores como +2. Sempre que você aumentar seu nível, essas esferas de influência ganham um bônus permanente de +1. Antes de realizar um teste de ação que se relacione a uma das esferas de influência do seu patrono, você pode gastar um Favor para clamar por ele e adicionar o valor da esfera ao teste.</p>
         </div>
         <div class="ability-block">
             <div class="ability-title">FAVOR</div>
-            <p>Você começa com 3 de Favor. Durante um descanso, você pode gastar um de seus movimentos de repouso para dar um dízimo ao seu patrono e ganhar Favor igual à sua Presença. Se optar por não fazer a oferenda, o Mestre ganha um Medo.</p>
+            <p>Comece com 3 de Favor. Durante um descanso, gaste um de seus movimentos de repouso para dar um dízimo ao seu patrono. Ao fazer isso, ganhe Favor igual à sua Presença. Se você optar por renunciar a essa oferta, o Mestre ganha um Medo em vez disso.</p>
            
         </div>
         <div class="ability-block">

@@ -20,7 +20,7 @@ const classDomains = {
     'Pugilista': ['Valor', 'Falange'],
     'Assassino': ['Lâmina', 'Meia-Noite'],
     'Bruxa': ['Pavor', 'Sabedoria'],
-    'Warlock': ['Pavor', 'Meia-Noite']
+    'Warlock': ['Pavor', 'Graça']
 };
 
 // Estatísticas Base (Vida e Evasão por classe)
@@ -557,7 +557,7 @@ Flexível: +1 em Evasão</p>
     `,
     'Warlock': `
         <div class="class-stats-grid">
-            <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Pavor e Sabedoria</span></div>
+            <div class="stat-item"><span class="stat-label">Domínios</span><span class="stat-value">Pavor e Graça</span></div>
             <div class="stat-item"><span class="stat-label">Evasão</span><span class="stat-value">11</span></div>
             <div class="stat-item"><span class="stat-label">Vida Inicial</span><span class="stat-value">5</span></div>
         </div>

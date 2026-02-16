@@ -879,3 +879,15 @@ dialog::backdrop {
 @media(max-width: 400px) {
     .class-stats-grid { grid-template-columns: none; }
 }
+
+/* Remove as setas (spin buttons) dos inputs numéricos */
+input[type="number"] {
+    -moz-appearance: textfield; /* Para Firefox */
+    appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Para Chrome, Safari, Edge */
+    margin: 0;
+}

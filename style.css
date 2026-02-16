@@ -100,7 +100,6 @@ h1, h2, h3, h4 {
   width: 100%;
   max-width: 100%;
   font-family: "Lato", sans-serif;
-  /* Correção Autofill Webkit */
 }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
   background-color: var(--bg-card) !important;
@@ -108,6 +107,9 @@ h1, h2, h3, h4 {
   border-color: var(--accent-gold) !important;
   outline: none;
   box-shadow: 0 0 5px rgba(212, 175, 55, 0.5);
+}
+.form-group input, .form-group select, .form-group textarea {
+  /* Correção Autofill Webkit */
 }
 .form-group input:-webkit-autofill, .form-group input:-webkit-autofill:hover, .form-group input:-webkit-autofill:focus, .form-group input:-webkit-autofill:active, .form-group select:-webkit-autofill, .form-group select:-webkit-autofill:hover, .form-group select:-webkit-autofill:focus, .form-group select:-webkit-autofill:active, .form-group textarea:-webkit-autofill, .form-group textarea:-webkit-autofill:hover, .form-group textarea:-webkit-autofill:focus, .form-group textarea:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 30px var(--bg-card) inset !important;
@@ -467,11 +469,13 @@ dialog::backdrop {
   width: 100%;
   padding: 5px 0;
   /* Remove setas do input number */
-  -moz-appearance: textfield;
 }
 .stat-card input::-webkit-outer-spin-button, .stat-card input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
+}
+.stat-card input {
+  -moz-appearance: textfield;
 }
 
 /* --- Combat Grid --- */
@@ -893,4 +897,16 @@ dialog::backdrop {
   .class-stats-grid {
     grid-template-columns: none;
   }
+}
+/* Remove as setas (spin buttons) dos inputs numéricos */
+input[type=number] {
+  -moz-appearance: textfield; /* Para Firefox */
+  -webkit-appearance: textfield;
+          appearance: textfield;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+  -webkit-appearance: none; /* Para Chrome, Safari, Edge */
+  margin: 0;
 }/*# sourceMappingURL=style.css.map */

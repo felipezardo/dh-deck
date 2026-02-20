@@ -691,7 +691,7 @@ function renderHome() {
         
         // Pega as cores da classe para o degradê (se não achar, usa um cinza padrão)
         const colors = classColors[char.class] || ['#333', '#111'];
-        const bannerGradient = `background: linear-gradient(135deg, ${colors[0]}, ${colors[1]});`;
+        const bannerGradient = `background: linear-gradient(135deg, ${colors[0]} 45%, ${colors[1]} 100%);`;
 
         const card = document.createElement('div');
         card.className = 'home-char-card';

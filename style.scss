@@ -287,41 +287,24 @@ dialog::backdrop {
    3. LAYOUT GERAL (Header, Panel, Tabs)
    ========================================= */
 
-/* --- Main Header --- */
+/* SUBSTITUA O BLOCO .main-header INTEIRO POR ESTE: */
 .main-header {
     background: rgba(0, 0, 0, 0.3);
     padding: 1rem;
     border-bottom: 1px solid var(--accent-gold);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    text-align: center;
 
-    h1 {
-        text-align: center;
+    #logo-home {
+        display: inline-block;
         margin-bottom: 10px;
-    }
-}
+        cursor: pointer;
+        transition: color 0.3s, transform 0.2s;
 
-/* --- Abas de Personagem (Topo) --- */
-.char-tabs {
-    display: flex;
-    gap: 5px;
-    overflow-x: auto;
-    justify-content: center;
-}
-
-.tab-btn {
-    background: var(--bg-panel);
-    border: 1px solid var(--border-color);
-    color: #888;
-    padding: 10px 20px;
-    cursor: pointer;
-    font-family: 'Cinzel', serif;
-    border-radius: 4px 4px 0 0;
-    transition: 0.3s;
-
-    &.active {
-        background: var(--accent-gold);
-        color: #000;
-        font-weight: bold;
+        &:hover {
+            color: var(--accent-gold-hover);
+            transform: scale(1.05);
+        }
     }
 }
 
@@ -907,4 +890,129 @@ input[type="number"]::-webkit-inner-spin-button {
     min-width: 22px;
     height: 22px;
     box-shadow: 0 0 5px rgba(212, 175, 55, 0.4);
+}
+
+/* =========================================
+   8. TELA HOME & CARDS
+   ========================================= */
+.hidden {
+    display: none !important;
+}
+
+.home-char-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    cursor: pointer;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        border-color: var(--accent-gold);
+    }
+
+    .card-banner {
+        height: 80px;
+        background-color: #0a111a;
+        background-size: cover;
+        background-position: center;
+        border-bottom: 2px solid var(--accent-gold);
+    }
+
+    .card-avatar-wrapper {
+        position: absolute;
+        top: 40px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        border: 3px solid var(--bg-card);
+        background: #111;
+        z-index: 2;
+    }
+
+    .card-avatar {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .edit-avatar-btn {
+        position: absolute;
+        bottom: 0;
+        right: -5px;
+        background: var(--accent-gold);
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        font-size: 0.8rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+
+    .card-info {
+        padding: 50px 15px 15px;
+        text-align: center;
+        flex: 1;
+
+        h3 { margin-bottom: 10px; font-size: 1.2rem; }
+        p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 5px; }
+        span { color: var(--text-main); font-weight: bold; }
+    }
+
+    .btn-delete-card {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.5);
+        border: 1px solid var(--danger);
+        border-radius: 4px;
+        color: var(--danger);
+        cursor: pointer;
+        padding: 5px;
+        font-size: 1rem;
+        transition: 0.3s;
+
+        &:hover {
+            background: var(--danger);
+            color: #fff;
+        }
+    }
+}
+
+.add-char-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 2px dashed var(--border-color);
+    color: var(--text-muted);
+
+    &:hover {
+        background: rgba(212, 175, 55, 0.05);
+        color: var(--accent-gold);
+        border-style: solid;
+    }
+
+    .add-icon {
+        font-size: 4rem;
+        margin-bottom: 10px;
+        font-weight: 300;
+    }
 }

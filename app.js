@@ -531,7 +531,7 @@ d10+3 fís | Duas mãos</p>
             <div class="ability-title">COMUNGAR</div>
             <p>Uma vez por descanso longo, durante um momento de calma, você pode comungar com um ancestral, divindade, espírito da natureza ou ser de outro mundo. Faça-lhes uma pergunta e, em seguida, role um número de d6s igual ao seu atributo de Conjuração. Escolha um valor dos resultados rolados e consulte a tabela abaixo para o efeito:</p>
             <ul>
-            <li>1–3: Você sente um sabor, um cheiro ou uma sensação relevante para a resposta.</li>
+            <li>1–3: Você sente um sabor, um cheiro ou uma sensação relevant para a resposta.</li>
             <li>4–5: Você ouve sons ou vê uma visão relevante para a resposta.</li>
             <li>6: Você experiencia psiquicamente uma cena relevante para a resposta como se estivesse lá.</li>
             </ul>
@@ -599,7 +599,7 @@ let characters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let activeCharId = null;
 
 // Referências DOM Principais
-const elTabs = document.getElementById('char-tabs');
+const elLogo = document.getElementById('logo-home'); // NOVO: Referência para o Logo
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
 const elDropdownContainer = document.getElementById('subclass-dropdown'); 
@@ -611,6 +611,11 @@ const elAncestryOptions = document.getElementById('ancestry-options');
 const elCommunity = document.getElementById('char-community');
 const elTransformation = document.getElementById('char-transformation');
 const elDescription = document.getElementById('class-description-box');
+// Novas Referências para a Home e Nível
+const elHomeView = document.getElementById('home-view');
+const elSheetView = document.getElementById('sheet-view');
+const elHomeGrid = document.getElementById('home-characters-grid');
+const elLevel = document.getElementById('char-level');
 
 // ==========================================
 // 3. INICIALIZAÇÃO
@@ -629,16 +634,11 @@ async function init() {
 
         // 2. Agora que temos os dados, iniciamos o resto
         loadSelectOptions();
-        renderTabs();
         setupSheetTabs();
-        
-        if (characters.length > 0) {
-            selectCharacter(characters[0].id);
-        } else {
-            createNewCharacter();
-        }
-        
         setupEventListeners();
+        
+        // Inicia SEMPRE na Home agora!
+        goHome();
 
     } catch (error) {
         console.error("Falha na inicialização:", error);
@@ -646,6 +646,73 @@ async function init() {
     }
 }
 
+// ==========================================
+// TELA HOME E CARDS DE PERSONAGENS
+// ==========================================
+function goHome() {
+    activeCharId = null;
+    elSheetView.classList.add('hidden');
+    elHomeView.classList.remove('hidden');
+    renderHome();
+}
+
+function renderHome() {
+    elHomeGrid.innerHTML = '';
+    
+    characters.forEach(char => {
+        const className = char.class || 'Classe Indefinida';
+        // Se tiver foto, usa. Se não, gera um avatar genérico bonito com as iniciais
+        const avatarUrl = char.avatar || `https://placehold.co/150x150/1a2639/d4af37?text=${encodeURIComponent(char.name ? char.name.charAt(0).toUpperCase() : '?')}`;
+        // Cria um Estandarte com o nome da classe usando placehold.co
+        const bannerUrl = `https://placehold.co/300x100/0f1724/8b9bb4?text=${encodeURIComponent(className)}`;
+
+        const card = document.createElement('div');
+        card.className = 'home-char-card';
+        card.innerHTML = `
+            <div class="card-banner" style="background-image: url('${bannerUrl}')"></div>
+            <div class="card-avatar-wrapper">
+                <img src="${avatarUrl}" class="card-avatar" alt="Avatar">
+                <button class="edit-avatar-btn" onclick="editAvatar(event, ${char.id})" title="Editar Foto">✏️</button>
+            </div>
+            <div class="card-info" onclick="selectCharacter(${char.id})">
+                <h3>${char.name || 'Sem Nome'}</h3>
+                <p>Nível: <span>${char.level || 1}</span></p>
+                <p>Classe: <span>${className}</span></p>
+            </div>
+            <button class="btn-delete-card" onclick="deleteCharacterHome(event, ${char.id})" title="Excluir">🗑️</button>
+        `;
+        elHomeGrid.appendChild(card);
+    });
+
+    const addCard = document.createElement('div');
+    addCard.className = 'home-char-card add-char-card';
+    addCard.onclick = () => createNewCharacter();
+    addCard.innerHTML = `<div class="add-icon">+</div><h3>Nova Ficha</h3>`;
+    elHomeGrid.appendChild(addCard);
+}
+
+function editAvatar(e, id) {
+    e.stopPropagation(); // Impede de abrir a ficha ao clicar na caneta
+    const url = prompt("Insira o Link (URL) da foto do seu personagem (Imgur, Discord, etc):");
+    if (url !== null && url.trim() !== "") {
+        const char = characters.find(c => c.id === id);
+        if(char) {
+            char.avatar = url.trim();
+            saveToStorage();
+            renderHome();
+        }
+    }
+}
+
+function deleteCharacterHome(e, id) {
+    e.stopPropagation();
+    activeCharId = id; 
+    document.getElementById('confirm-modal').showModal();
+}
+
+// ==========================================
+// FUNÇÕES AUXILIARES DE INICIALIZAÇÃO
+// ==========================================
 function loadSelectOptions() {
     elClass.innerHTML = '<option value="">Selecione...</option>';
     Object.keys(classDomains).forEach(cls => {
@@ -675,7 +742,7 @@ function createNewCharacter() {
 
     const newChar = {
         id: Date.now(),
-        name: '', class: '', subclass: [], ancestry: [], community: '', transformation: '',
+        name: '', class: '', subclass: [], ancestry: [], community: '', transformation: '', avatar: '', level: 1,
         stats: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 },
         
         combat: {
@@ -698,8 +765,7 @@ function createNewCharacter() {
             notes: ''
         },
 
-        deck: [],
-        level: 1
+        deck: []
     };
     characters.push(newChar);
     saveToStorage();
@@ -711,10 +777,16 @@ function selectCharacter(id) {
     const char = characters.find(c => c.id === id);
     if (!char) return;
 
-    // Campos Básicos
+    // Controle de Telas (Esconde a Home e Mostra a Ficha)
+    elHomeView.classList.add('hidden');
+    elSheetView.classList.remove('hidden');
+
+    // Campos Básicos e Nível
     elName.value = char.name || '';
+    elLevel.value = char.level || 1;
+    document.getElementById('filter-level').value = char.level || 1; // Sincroniza a Biblioteca
+
     elClass.value = char.class || '';
-    
     elCommunity.value = char.community || '';
     if(elTransformation) elTransformation.value = char.transformation || '';
 
@@ -791,7 +863,6 @@ function selectCharacter(id) {
 
     updateClassDescription(char.class);
     renderOriginCards(char);
-    renderTabs();
     renderDeck();
 }
 
@@ -799,8 +870,9 @@ function saveCurrentChar() {
     const char = characters.find(c => c.id === activeCharId);
     if (!char) return;
 
-    // Básicos
+    // Básicos e Nível
     char.name = elName.value;
+    char.level = parseInt(elLevel.value) || 1;
     char.class = elClass.value;
     char.community = elCommunity.value;
     if(elTransformation) char.transformation = elTransformation.value;
@@ -872,7 +944,6 @@ function saveCurrentChar() {
     };
 
     saveToStorage();
-    renderTabs();
     renderOriginCards(char);
 }
 
@@ -1050,19 +1121,6 @@ function renderOriginCards(char) {
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));
 }
 
-function renderTabs() {
-    const btnAdd = document.getElementById('btn-new-char');
-    elTabs.innerHTML = '';
-    characters.forEach(char => {
-        const btn = document.createElement('button');
-        btn.className = `tab-btn ${char.id === activeCharId ? 'active' : ''}`;
-        btn.innerText = char.name || 'Novo Herói';
-        btn.onclick = () => selectCharacter(char.id);
-        elTabs.appendChild(btn);
-    });
-    elTabs.appendChild(btnAdd);
-}
-
 function saveToStorage() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(characters));
 }
@@ -1180,11 +1238,21 @@ function setupSheetTabs() {
 }
 
 function setupEventListeners() {
-    document.getElementById('btn-new-char').addEventListener('click', createNewCharacter);
+    // Clicar no Logo volta para a Home
+    elLogo.addEventListener('click', goHome);
     
+    // Listener do Input Nível (Para atualizar a biblioteca)
+    elLevel.addEventListener('change', (e) => {
+        document.getElementById('filter-level').value = e.target.value;
+        saveCurrentChar();
+    });
+
     // Inputs Gerais (INCLUINDO OS TEXTAREAS)
     const inputs = document.querySelectorAll('input:not(.custom-checkbox), select, textarea');
     inputs.forEach(input => {
+        // Pular o char-level para evitar duplicação de eventos
+        if (input.id === 'char-level') return; 
+        
         input.addEventListener('change', (e) => {
             if (['char-armor-value', 'char-hp-max', 'char-stress-max'].includes(e.target.id)) {
                 saveCurrentChar();
@@ -1208,12 +1276,20 @@ function setupEventListeners() {
     });
 
     document.getElementById('btn-delete-char').addEventListener('click', () => document.getElementById('confirm-modal').showModal());
+    
     document.getElementById('confirm-yes').addEventListener('click', () => {
         characters = characters.filter(c => c.id !== activeCharId);
         saveToStorage();
-        if (characters.length > 0) selectCharacter(characters[0].id); else createNewCharacter();
         document.getElementById('confirm-modal').close();
+        
+        // Se excluiu a ficha estando nela, volta pra home. Se estava na home, só recarrega a home.
+        if (!elSheetView.classList.contains('hidden')) {
+            goHome(); 
+        } else {
+            renderHome();
+        }
     });
+
     document.getElementById('confirm-no').addEventListener('click', () => document.getElementById('confirm-modal').close());
     document.getElementById('btn-open-library').addEventListener('click', openLibrary);
     document.getElementById('close-library').addEventListener('click', () => document.getElementById('library-modal').close());

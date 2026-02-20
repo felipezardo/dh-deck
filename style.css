@@ -988,14 +988,20 @@ input[type=number]::-webkit-inner-spin-button {
   background: var(--accent-gold);
   border: none;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
-  font-size: 0.8rem;
+  width: 28px;
+  height: 28px;
+  color: #000; /* Define a cor base do SVG */
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+  transition: transform 0.2s;
+}
+.home-char-card .edit-avatar-btn svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
 }
 .home-char-card .edit-avatar-btn:hover {
   transform: scale(1.1);
@@ -1027,9 +1033,16 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 4px;
   color: var(--danger);
   cursor: pointer;
-  padding: 5px;
-  font-size: 1rem;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: 0.3s;
+}
+.home-char-card .btn-delete-card svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
 }
 .home-char-card .btn-delete-card:hover {
   background: var(--danger);

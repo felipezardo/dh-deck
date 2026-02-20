@@ -41,6 +41,24 @@ const classBaseStats = {
     'Warlock': { evasion: 11, hp: 5 }
 };
 
+// NOVO: Cores de cada classe para o degradê do Banner
+const classColors = {
+    'Bardo': ['#ae3b7c', '#3364a3'],
+    'Druida': ['#17633b', '#623b74'],
+    'Guardião': ['#b75d1c', '#892E29'],
+    'Patrulheiro': ['#c4cbcd', '#17633b'], 
+    'Ladino': ['#3e4341', '#ae3b7c'],
+    'Serafim': ['#C2A91B', '#b75d1c'],
+    'Feiticeiro': ['#623b74', '#3e4341'],
+    'Guerreiro': ['#892E29', '#c4cbcd'],
+    'Mago': ['#3364a3', '#C2A91B'],
+    'BloodHunter': ['#5f0505', '#892E29'], 
+    'Pugilista': ['#e2680e', '#a4a9a8'],
+    'Assassino': ['#af231c', '#3e4341'], 
+    'Bruxa': ['#4e345b', '#244e30'],
+    'Warlock': ['#4e345b', '#8d3965']
+};
+
 // Textos do PDF Completos
 const classDescriptions = {
     'Bardo': `
@@ -597,10 +615,11 @@ Flexível: +1 em Evasão</p>
 const STORAGE_KEY = 'daggerheart_manager_v11_tabs_equip';
 let characters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let activeCharId = null;
+let editingAvatarCharId = null; // NOVO: Controle de qual personagem está mudando a foto
 
 // Referências DOM Principais
 const elLogo = document.getElementById('logo-home'); 
-const elBtnBack = document.getElementById('btn-back-home'); // REFERÊNCIA DO BOTÃO VOLTAR
+const elBtnBack = document.getElementById('btn-back-home'); 
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
 const elDropdownContainer = document.getElementById('subclass-dropdown'); 
@@ -661,27 +680,33 @@ function goHome() {
 function renderHome() {
     elHomeGrid.innerHTML = '';
     
+    // Ícones SVG
+    const trashSvg = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
+    const editSvg = `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
+
     characters.forEach(char => {
         const className = char.class || 'Classe Indefinida';
         // Se tiver foto, usa. Se não, gera um avatar genérico bonito com as iniciais
         const avatarUrl = char.avatar || `https://placehold.co/150x150/1a2639/d4af37?text=${encodeURIComponent(char.name ? char.name.charAt(0).toUpperCase() : '?')}`;
-        // Cria um Estandarte com o nome da classe usando placehold.co
-        const bannerUrl = `https://placehold.co/300x100/0f1724/8b9bb4?text=${encodeURIComponent(className)}`;
+        
+        // Pega as cores da classe para o degradê (se não achar, usa um cinza padrão)
+        const colors = classColors[char.class] || ['#333', '#111'];
+        const bannerGradient = `background: linear-gradient(135deg, ${colors[0]}, ${colors[1]});`;
 
         const card = document.createElement('div');
         card.className = 'home-char-card';
         card.innerHTML = `
-            <div class="card-banner" onclick="selectCharacter(${char.id})" style="background-image: url('${bannerUrl}')"></div>
+            <div class="card-banner" onclick="selectCharacter(${char.id})" style="${bannerGradient}"></div>
             <div class="card-avatar-wrapper">
-                <img src="${avatarUrl}" class="card-avatar" alt="Avatar">
-                <button class="edit-avatar-btn" onclick="editAvatar(event, ${char.id})" title="Editar Foto">✏️</button>
+                <img src="${avatarUrl}" class="card-avatar" alt="Avatar" onclick="selectCharacter(${char.id})">
+                <button class="edit-avatar-btn" onclick="editAvatar(event, ${char.id})" title="Editar Foto">${editSvg}</button>
             </div>
             <div class="card-info" onclick="selectCharacter(${char.id})">
                 <h3>${char.name || 'Sem Nome'}</h3>
                 <p>Nível: <span>${char.level || 1}</span></p>
                 <p>Classe: <span>${className}</span></p>
             </div>
-            <button class="btn-delete-card" onclick="deleteCharacterHome(event, ${char.id})" title="Excluir">🗑️</button>
+            <button class="btn-delete-card" onclick="deleteCharacterHome(event, ${char.id})" title="Excluir">${trashSvg}</button>
         `;
         elHomeGrid.appendChild(card);
     });
@@ -693,17 +718,13 @@ function renderHome() {
     elHomeGrid.appendChild(addCard);
 }
 
+// NOVO: Abre o Modal de Avatar
 function editAvatar(e, id) {
-    e.stopPropagation(); // Impede de abrir a ficha ao clicar na caneta
-    const url = prompt("Insira o Link (URL) da foto do seu personagem (Imgur, Discord, etc):");
-    if (url !== null && url.trim() !== "") {
-        const char = characters.find(c => c.id === id);
-        if(char) {
-            char.avatar = url.trim();
-            saveToStorage();
-            renderHome();
-        }
-    }
+    e.stopPropagation(); 
+    editingAvatarCharId = id;
+    document.getElementById('avatar-upload-input').value = ""; // Limpa inputs anteriores
+    document.getElementById('avatar-url-input').value = "";
+    document.getElementById('avatar-modal').showModal();
 }
 
 function deleteCharacterHome(e, id) {
@@ -1123,8 +1144,14 @@ function renderOriginCards(char) {
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));
 }
 
+// NOVO: Adicionado try/catch no saveToStorage para evitar crash se a imagem for pesada demais
 function saveToStorage() {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(characters));
+    try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(characters));
+    } catch (e) {
+        console.error(e);
+        alert("Erro ao salvar! Se você subiu uma imagem, ela pode ser muito pesada para a memória do navegador. Tente escolher uma imagem menor ou use um Link (URL).");
+    }
 }
 
 function renderDeck() {
@@ -1219,7 +1246,7 @@ function toggleCardInDeck(cardData, domainName, shouldRemove) {
 }
 
 // ==========================================
-// 7. LÓGICA DAS ABAS INTERNAS (NOVO)
+// 7. LÓGICA DAS ABAS INTERNAS E EVENTOS
 // ==========================================
 function setupSheetTabs() {
     const buttons = document.querySelectorAll('.sheet-tab-btn');
@@ -1247,13 +1274,13 @@ function setupEventListeners() {
     if(elBtnBack) elBtnBack.addEventListener('click', goHome);
     
     // Listener do Input Nível (Para atualizar a biblioteca)
-    elLevel.addEventListener('change', (e) => {
+    if(elLevel) elLevel.addEventListener('change', (e) => {
         document.getElementById('filter-level').value = e.target.value;
         saveCurrentChar();
     });
 
     // Inputs Gerais (INCLUINDO OS TEXTAREAS)
-    const inputs = document.querySelectorAll('input:not(.custom-checkbox), select, textarea');
+    const inputs = document.querySelectorAll('input:not(.custom-checkbox):not(#avatar-upload-input):not(#avatar-url-input), select, textarea');
     inputs.forEach(input => {
         // Pular o char-level para evitar duplicação de eventos
         if (input.id === 'char-level') return; 
@@ -1298,7 +1325,72 @@ function setupEventListeners() {
     document.getElementById('confirm-no').addEventListener('click', () => document.getElementById('confirm-modal').close());
     document.getElementById('btn-open-library').addEventListener('click', openLibrary);
     document.getElementById('close-library').addEventListener('click', () => document.getElementById('library-modal').close());
-    document.getElementById('filter-level').addEventListener('change', openLibrary);
+    
+    const filterLvl = document.getElementById('filter-level');
+    if(filterLvl) filterLvl.addEventListener('change', openLibrary);
+
+    // Listener do Botão Salvar dentro do Modal de Avatar
+    document.getElementById('btn-save-avatar').addEventListener('click', () => {
+        if (!editingAvatarCharId) return;
+        const char = characters.find(c => c.id === editingAvatarCharId);
+        if (!char) return;
+
+        const fileInput = document.getElementById('avatar-upload-input');
+        const urlInput = document.getElementById('avatar-url-input');
+
+        // Se o usuário selecionou um arquivo local
+        if (fileInput.files && fileInput.files[0]) {
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(event) {
+                // REDIMENSIONANDO A IMAGEM PARA NÃO EXPLODIR O LOCALSTORAGE
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const MAX_SIZE = 250; // Tamanho máximo da imagem
+                    let width = img.width;
+                    let height = img.height;
+
+                    if (width > height) {
+                        if (width > MAX_SIZE) {
+                            height *= MAX_SIZE / width;
+                            width = MAX_SIZE;
+                        }
+                    } else {
+                        if (height > MAX_SIZE) {
+                            width *= MAX_SIZE / height;
+                            height = MAX_SIZE;
+                        }
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Salva como uma imagem compactada no objeto char
+                    char.avatar = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    saveToStorage();
+                    renderHome();
+                    document.getElementById('avatar-modal').close();
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        } 
+        // Se ele não enviou arquivo, mas digitou a URL
+        else if (urlInput.value.trim() !== "") {
+            char.avatar = urlInput.value.trim();
+            saveToStorage();
+            renderHome();
+            document.getElementById('avatar-modal').close();
+        } 
+        // Se ele clicou em salvar sem preencher nada
+        else {
+            alert("Por favor, selecione uma imagem do seu dispositivo ou insira um link URL.");
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', init);

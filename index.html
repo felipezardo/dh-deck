@@ -27,7 +27,9 @@
 
         <div id="sheet-view" class="hidden">
             <section id="setup-section" class="panel">
+                
                 <button id="btn-back-home" class="btn-back">⬅ Voltar</button>
+
                 <h2 class="section-title">Quem é você?</h2>
 
                 <div style="display: flex; gap: 15px; align-items: flex-end; margin-bottom: 1rem;">
@@ -297,10 +299,35 @@
     <dialog id="confirm-modal">
         <div class="modal-content small">
             <p style="text-align:center; padding: 20px;">Tem certeza que deseja excluir este personagem?</p>
-            <div class="modal-actions" style="display:flex; justify-content:center; gap:10px;">
+            <div class="modal-actions" style="display:flex; justify-content:center;  gap:10px;">
                 <button id="confirm-yes" class="btn-danger">Sim</button>
                 <button id="confirm-no" class="btn-secondary"
                     style="padding:10px 20px; background:#444; color:#fff; border:none; cursor:pointer;">Cancelar</button>
+            </div>
+        </div>
+    </dialog>
+
+    <dialog id="avatar-modal">
+        <div class="modal-content small" style="background: var(--bg-card); border: 1px solid var(--accent-gold); border-radius: 8px;">
+            <div class="modal-header" style="display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #333;">
+                <h3 style="margin:0; font-size: 1.2rem;">Editar Imagem</h3>
+                <button class="close-modal-btn" onclick="document.getElementById('avatar-modal').close()" title="Fechar" style="border:none; width: 30px; height: 30px;">✕</button>
+            </div>
+            <div style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
+                
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Fazer Upload do dispositivo</label>
+                    <input type="file" id="avatar-upload-input" accept="image/*" style="padding: 10px; background: #111 !important; color: #fff !important; cursor: pointer;">
+                </div>
+
+                <div style="text-align: center; color: var(--accent-gold); font-weight: bold; font-family: 'Cinzel', serif;">OU</div>
+                
+                <div class="form-group" style="margin-bottom:0;">
+                    <label>Inserir Link (URL)</label>
+                    <input type="text" id="avatar-url-input" placeholder="https://exemplo.com/foto.png">
+                </div>
+
+                <button id="btn-save-avatar" class="btn-primary" style="margin-top: 10px;">Salvar Avatar</button>
             </div>
         </div>
     </dialog>

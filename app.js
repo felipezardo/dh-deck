@@ -229,7 +229,7 @@ Pesada: −1 em Evasão</p>
             <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
             <p>Adaga | Acuidade corpo a corpo | d8+1 fís | Uma mão</p>
         </div>
-          <div class="ability-block">
+         <div class="ability-block">
             <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
             <p>Adaga pequena | Acuidade CaC | d8 fís | Uma mão
 Par: sua arma principal causa +2 de dano em alvos CaC</p>
@@ -271,7 +271,7 @@ Flexível: +1 em Evasão</p>
             <p>Machado sagrado | Força corpo a corpo
 d8+1 mág | Uma mão</p>
         </div>
-          <div class="ability-block">
+         <div class="ability-block">
             <div class="ability-title">ARMA SECUNDÁRIA SUGERIDA</div>
             <p>Escudo redondo | Força corpo a corpo | d4 fís | Uma mão
 Armadura: +1 Ponto de Armadura</p>
@@ -317,7 +317,7 @@ Pesada: −1 em Evasão</p>
             <div class="ability-title">ARMA PRIMÁRIA SUGERIDA</div>
             <p>Cajado duplo | Instinto distante | d6+3 mág | Duas mãos</p>
         </div>
-          <div class="ability-block">
+         <div class="ability-block">
             
         <div class="ability-block">
             <div class="ability-title">ARMADURA SUGERIDA</div>            
@@ -572,7 +572,7 @@ Flexível: +1 em Evasão</p>
         <div class="ability-block">
             <div class="ability-title">FAVOR</div>
             <p>Comece com 3 de Favor. Durante um descanso, gaste um de seus movimentos de repouso para dar um dízimo ao seu patrono. Ao fazer isso, ganhe Favor igual à sua Presença. Se você optar por renunciar a essa oferta, o Mestre ganha um Medo em vez disso.</p>
-           
+            
         </div>
         <div class="ability-block">
             <div class="ability-title">ATRIBUTOS SUGERIDOS</div>
@@ -605,7 +605,9 @@ const elClass = document.getElementById('char-class');
 const elDropdownContainer = document.getElementById('subclass-dropdown'); 
 const elDropdownDisplay = document.getElementById('subclass-display');    
 const elDropdownOptions = document.getElementById('subclass-options');    
-const elAncestry = document.getElementById('char-ancestry');
+const elAncestryContainer = document.getElementById('ancestry-dropdown');
+const elAncestryDisplay = document.getElementById('ancestry-display');
+const elAncestryOptions = document.getElementById('ancestry-options');
 const elCommunity = document.getElementById('char-community');
 const elTransformation = document.getElementById('char-transformation');
 const elDescription = document.getElementById('class-description-box');
@@ -650,13 +652,6 @@ function loadSelectOptions() {
         elClass.innerHTML += `<option value="${cls}">${cls}</option>`;
     });
 
-    elAncestry.innerHTML = '<option value="">Selecione...</option>';
-    if(fullData.Ancestralidades) {
-        fullData.Ancestralidades.forEach(a => {
-            elAncestry.innerHTML += `<option value="${a.nome}">${a.nome}</option>`;
-        });
-    }
-
     elCommunity.innerHTML = '<option value="">Selecione...</option>';
     if(fullData.Comunidades) {
         fullData.Comunidades.forEach(c => {
@@ -680,7 +675,7 @@ function createNewCharacter() {
 
     const newChar = {
         id: Date.now(),
-        name: '', class: '', subclass: [], ancestry: '', community: '', transformation: '',
+        name: '', class: '', subclass: [], ancestry: [], community: '', transformation: '',
         stats: { agility: 0, strength: 0, finesse: 0, instinct: 0, presence: 0, knowledge: 0 },
         
         combat: {
@@ -719,7 +714,7 @@ function selectCharacter(id) {
     // Campos Básicos
     elName.value = char.name || '';
     elClass.value = char.class || '';
-    elAncestry.value = char.ancestry || '';
+    
     elCommunity.value = char.community || '';
     if(elTransformation) elTransformation.value = char.transformation || '';
 
@@ -786,9 +781,14 @@ function selectCharacter(id) {
     document.getElementById('equip-inventory').value = e.inventory || '';
     document.getElementById('equip-notes').value = e.notes || '';
 
-    // Subclasses e Cartas
+    // Subclasses, Ancestralidade e Cartas
     let selectedSubclasses = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     setupSubclassDropdown(char.class, selectedSubclasses);
+
+    let selectedAncestries = Array.isArray(char.ancestry) ? char.ancestry : (char.ancestry ? [char.ancestry] : []);
+    char.ancestry = selectedAncestries;
+    setupAncestryDropdown(selectedAncestries);
+
     updateClassDescription(char.class);
     renderOriginCards(char);
     renderTabs();
@@ -802,7 +802,6 @@ function saveCurrentChar() {
     // Básicos
     char.name = elName.value;
     char.class = elClass.value;
-    char.ancestry = elAncestry.value;
     char.community = elCommunity.value;
     if(elTransformation) char.transformation = elTransformation.value;
 
@@ -877,7 +876,7 @@ function saveCurrentChar() {
     renderOriginCards(char);
 }
 
-// ... (renderResourceSlots, updateClassDescription, dropdown logic, deckbuilder, etc - MANTIDOS IGUAIS) ...
+// ... (renderResourceSlots, updateClassDescription, dropdown logic, deckbuilder, etc) ...
 function renderResourceSlots(containerId, count, marksArray = []) {
     const container = document.getElementById(containerId);
     if(!container) return;
@@ -944,14 +943,85 @@ function updateSubclassDisplay(selectedValues) {
     elDropdownDisplay.innerText = displayNames.join(', ');
 }
 
+// Lógica Ancestralidade Dropdown
+function setupAncestryDropdown(selectedValues = []) {
+    elAncestryOptions.innerHTML = ''; 
+    if (fullData.Ancestralidades) {
+        fullData.Ancestralidades.forEach((ancestry) => {
+            const optionDiv = document.createElement('div');
+            optionDiv.className = 'option-item';
+            
+            // Verifica se está selecionado e qual a posição (1 ou 2)
+            const indexInSelection = selectedValues.indexOf(ancestry.nome);
+            const isSelected = indexInSelection !== -1;
+            
+            if (isSelected) optionDiv.classList.add('selected');
+            
+            let htmlContent = `<input type="checkbox" value="${ancestry.nome}" style="display:none;" ${isSelected ? 'checked' : ''}><span>${ancestry.nome}</span>`;
+            
+            // Se estiver selecionado, adiciona a Badge com o número (índice + 1)
+            if (isSelected) {
+                htmlContent += `<span class="order-badge">${indexInSelection + 1}</span>`;
+            }
+            
+            optionDiv.innerHTML = htmlContent;
+            
+            // Evento de Clique
+            optionDiv.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const char = characters.find(c => c.id === activeCharId);
+                let currentSelected = Array.isArray(char.ancestry) ? [...char.ancestry] : [];
+                
+                const alreadySelectedIndex = currentSelected.indexOf(ancestry.nome);
+                
+                if (alreadySelectedIndex !== -1) {
+                    // Clicou em um já selecionado -> Desmarca
+                    currentSelected.splice(alreadySelectedIndex, 1);
+                } else {
+                    // Clicou em um novo -> Marca (Limite de 2)
+                    if (currentSelected.length >= 2) {
+                        alert("Você só pode selecionar até 2 ancestralidades.");
+                        return;
+                    }
+                    currentSelected.push(ancestry.nome); // Adiciona no final da fila
+                }
+                
+                // Salva a nova array diretamente no personagem para garantir a ordem
+                char.ancestry = currentSelected;
+                setupAncestryDropdown(currentSelected); // Recria para atualizar visual
+                saveCurrentChar(); // Salva no Storage e renderiza cartas
+            });
+            
+            elAncestryOptions.appendChild(optionDiv);
+        });
+    }
+    updateAncestryDisplay(selectedValues);
+}
+
+function updateAncestryDisplay(selectedValues) {
+    if (!selectedValues || selectedValues.length === 0) {
+        elAncestryDisplay.innerText = "Selecione...";
+        return;
+    }
+    elAncestryDisplay.innerText = selectedValues.join(', ');
+}
+
+
 window.addEventListener('click', (e) => {
     if (elDropdownContainer && !elDropdownContainer.contains(e.target)) elDropdownOptions.classList.add('hidden');
+    if (elAncestryContainer && !elAncestryContainer.contains(e.target)) elAncestryOptions.classList.add('hidden');
 });
 
 if (elDropdownDisplay) {
     elDropdownDisplay.addEventListener('click', (e) => {
         const char = characters.find(c => c.id === activeCharId);
         if (char && char.class) elDropdownOptions.classList.toggle('hidden');
+    });
+}
+
+if (elAncestryDisplay) {
+    elAncestryDisplay.addEventListener('click', (e) => {
+        elAncestryOptions.classList.toggle('hidden');
     });
 }
 
@@ -968,8 +1038,13 @@ function renderOriginCards(char) {
             container.appendChild(div);
         }
     };
+    
     addStaticCard('Comunidades', char.community);
-    addStaticCard('Ancestralidades', char.ancestry);
+    
+    // Tratando array de ancestralidades
+    let ancestries = Array.isArray(char.ancestry) ? char.ancestry : (char.ancestry ? [char.ancestry] : []);
+    ancestries.forEach(anc => addStaticCard('Ancestralidades', anc));
+    
     if (char.transformation) addStaticCard('Transformacoes', char.transformation);
     let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));

@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daggersheets V2</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Lato:wght@300;400;700&display=swap"
+        rel="stylesheet">
     <link rel="icon" href="images/logo.png" type="image/png" />
 </head>
+
 <body>
 
     <header class="main-header">
@@ -20,7 +23,7 @@
     <main id="app">
         <section id="setup-section" class="panel">
             <h2 class="section-title">Quem é você?</h2>
-            
+
             <div class="form-group">
                 <label for="char-name">Nome do Personagem</label>
                 <input type="text" id="char-name" placeholder="Ex: Cotty, o Bosta | Nível">
@@ -29,9 +32,11 @@
             <div class="grid-4">
                 <div class="form-group">
                     <label>Classe</label>
-                    <select id="char-class"><option value="">Selecione...</option></select>
+                    <select id="char-class">
+                        <option value="">Selecione...</option>
+                    </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label>Subclasse</label>
                     <div class="custom-dropdown" id="subclass-dropdown">
@@ -50,13 +55,28 @@
                     </select>
                 </div>
 
+                <!-- <div class="form-group">
+                    <label>Ancestralidade</label>
+                    <select id="char-ancestry">
+                        <option value="">Selecione...</option>
+                    </select>
+                </div> -->
+
                 <div class="form-group">
                     <label>Ancestralidade</label>
-                    <select id="char-ancestry"><option value="">Selecione...</option></select>
+                    <div class="custom-dropdown" id="ancestry-dropdown">
+                        <div class="dropdown-display" id="ancestry-display">
+                            Selecione...
+                        </div>
+                        <div class="dropdown-options hidden" id="ancestry-options">
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Comunidade</label>
-                    <select id="char-community"><option value="">Selecione...</option></select>
+                    <select id="char-community">
+                        <option value="">Selecione...</option>
+                    </select>
                 </div>
             </div>
 
@@ -77,12 +97,18 @@
                 <div id="tab-stats" class="sheet-tab-content active">
                     <h3 class="section-subtitle">Atributos</h3>
                     <div class="stats-grid">
-                        <div class="stat-card"><label>Agilidade</label><input type="number" id="stat-agility" value="0"></div>
-                        <div class="stat-card"><label>Força</label><input type="number" id="stat-strength" value="0"></div>
-                        <div class="stat-card"><label>Acuidade</label><input type="number" id="stat-finesse" value="0"></div>
-                        <div class="stat-card"><label>Instinto</label><input type="number" id="stat-instinct" value="0"></div>
-                        <div class="stat-card"><label>Presença</label><input type="number" id="stat-presence" value="0"></div>
-                        <div class="stat-card"><label>Conhecimento</label><input type="number" id="stat-knowledge" value="0"></div>
+                        <div class="stat-card"><label>Agilidade</label><input type="number" id="stat-agility" value="0">
+                        </div>
+                        <div class="stat-card"><label>Força</label><input type="number" id="stat-strength" value="0">
+                        </div>
+                        <div class="stat-card"><label>Acuidade</label><input type="number" id="stat-finesse" value="0">
+                        </div>
+                        <div class="stat-card"><label>Instinto</label><input type="number" id="stat-instinct" value="0">
+                        </div>
+                        <div class="stat-card"><label>Presença</label><input type="number" id="stat-presence" value="0">
+                        </div>
+                        <div class="stat-card"><label>Conhecimento</label><input type="number" id="stat-knowledge"
+                                value="0"></div>
                     </div>
 
                     <h3 class="section-subtitle">Recursos</h3>
@@ -92,7 +118,7 @@
                                 <label>Evasão</label>
                                 <input type="number" id="char-evasion" value="10">
                             </div>
-                            
+
                             <div class="armor-section">
                                 <div class="stat-box-large shield-shape">
                                     <label>Armadura</label>
@@ -102,20 +128,22 @@
                                 <small class="slot-label">Marque para reduzir dano</small>
                             </div>
                         </div>
-                        
+
                         <div class="combat-col center-col">
                             <div class="threshold-container">
                                 <div class="thresh-label"><span>Menor</span><small>(1 PV)</small></div>
-                                <div class="thresh-separator"><input type="number" id="thresh-major-val" class="thresh-input" placeholder="0"></div>
+                                <div class="thresh-separator"><input type="number" id="thresh-major-val"
+                                        class="thresh-input" placeholder="0"></div>
                                 <div class="thresh-label"><span>Maior</span><small>(2 PV)</small></div>
-                                <div class="thresh-separator"><input type="number" id="thresh-severe-val" class="thresh-input" placeholder="0"></div>
+                                <div class="thresh-separator"><input type="number" id="thresh-severe-val"
+                                        class="thresh-input" placeholder="0"></div>
                                 <div class="thresh-label"><span>Grave</span><small>(3 PV)</small></div>
                             </div>
 
                             <div class="resource-track">
                                 <div class="resource-header-row">
                                     <label>Esperança</label>
-                                    <input type="hidden" id="char-hope-max" value="6"> 
+                                    <input type="hidden" id="char-hope-max" value="6">
                                 </div>
                                 <div class="slots-container hope-slots" id="hope-slots-display"></div>
                             </div>
@@ -149,7 +177,7 @@
 
                 <div id="tab-equip" class="sheet-tab-content">
                     <div class="equipment-layout">
-                        
+
                         <div class="prof-row">
                             <div class="form-group proficiency-box">
                                 <label>Proficiência</label>
@@ -160,7 +188,8 @@
                         <div class="equip-card">
                             <h4 class="equip-title">Arma Primária</h4>
                             <div class="equip-row-inputs">
-                                <input type="text" id="equip-p-name" class="equip-input-name" placeholder="Nome da Arma">
+                                <input type="text" id="equip-p-name" class="equip-input-name"
+                                    placeholder="Nome da Arma">
                                 <input type="text" id="equip-p-attr" class="equip-input-small" placeholder="Atributo">
                                 <input type="text" id="equip-p-range" class="equip-input-small" placeholder="Alcance">
                                 <input type="text" id="equip-p-dmg" class="equip-input-small" placeholder="Dano">
@@ -173,7 +202,8 @@
                         <div class="equip-card">
                             <h4 class="equip-title">Arma Secundária</h4>
                             <div class="equip-row-inputs">
-                                <input type="text" id="equip-s-name" class="equip-input-name" placeholder="Nome da Arma">
+                                <input type="text" id="equip-s-name" class="equip-input-name"
+                                    placeholder="Nome da Arma">
                                 <input type="text" id="equip-s-attr" class="equip-input-small" placeholder="Atributo">
                                 <input type="text" id="equip-s-range" class="equip-input-small" placeholder="Alcance">
                                 <input type="text" id="equip-s-dmg" class="equip-input-small" placeholder="Dano">
@@ -186,9 +216,11 @@
                         <div class="equip-card">
                             <h4 class="equip-title">Armadura</h4>
                             <div class="equip-row-inputs">
-                                <input type="text" id="equip-a-name" class="equip-input-name" placeholder="Nome da Armadura">
+                                <input type="text" id="equip-a-name" class="equip-input-name"
+                                    placeholder="Nome da Armadura">
                                 <input type="text" id="equip-a-base" class="equip-input-small" placeholder="Base">
-                                <input type="text" id="equip-a-thresholds" class="equip-input-wide" placeholder="Limiares (ex: 5 / 10 / 15)">
+                                <input type="text" id="equip-a-thresholds" class="equip-input-wide"
+                                    placeholder="Limiares (ex: 5 / 10 / 15)">
                             </div>
                             <div class="equip-row-full">
                                 <input type="text" id="equip-a-traits" placeholder="Habilidades / Características">
@@ -202,7 +234,8 @@
                             </div>
                             <div class="form-group">
                                 <label>Anotações & Ouro</label>
-                                <textarea id="equip-notes" rows="8" placeholder="Dinheiro, notas de campanha, NPCs..."></textarea>
+                                <textarea id="equip-notes" rows="8"
+                                    placeholder="Dinheiro, notas de campanha, NPCs..."></textarea>
                             </div>
                         </div>
                     </div>
@@ -260,7 +293,8 @@
             <p style="text-align:center; padding: 20px;">Tem certeza que deseja excluir este personagem?</p>
             <div class="modal-actions" style="display:flex; justify-content:center; gap:10px;">
                 <button id="confirm-yes" class="btn-danger">Sim</button>
-                <button id="confirm-no" class="btn-secondary" style="padding:10px 20px; background:#444; color:#fff; border:none; cursor:pointer;">Cancelar</button>
+                <button id="confirm-no" class="btn-secondary"
+                    style="padding:10px 20px; background:#444; color:#fff; border:none; cursor:pointer;">Cancelar</button>
             </div>
         </div>
     </dialog>
@@ -268,4 +302,5 @@
     <!-- <script src="data.js"></script>  -->
     <script src="app.js"></script>
 </body>
+
 </html>

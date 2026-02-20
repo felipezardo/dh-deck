@@ -599,7 +599,8 @@ let characters = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 let activeCharId = null;
 
 // Referências DOM Principais
-const elLogo = document.getElementById('logo-home'); // NOVO: Referência para o Logo
+const elLogo = document.getElementById('logo-home'); 
+const elBtnBack = document.getElementById('btn-back-home'); // REFERÊNCIA DO BOTÃO VOLTAR
 const elName = document.getElementById('char-name');
 const elClass = document.getElementById('char-class');
 const elDropdownContainer = document.getElementById('subclass-dropdown'); 
@@ -611,6 +612,7 @@ const elAncestryOptions = document.getElementById('ancestry-options');
 const elCommunity = document.getElementById('char-community');
 const elTransformation = document.getElementById('char-transformation');
 const elDescription = document.getElementById('class-description-box');
+
 // Novas Referências para a Home e Nível
 const elHomeView = document.getElementById('home-view');
 const elSheetView = document.getElementById('sheet-view');
@@ -669,7 +671,7 @@ function renderHome() {
         const card = document.createElement('div');
         card.className = 'home-char-card';
         card.innerHTML = `
-            <div class="card-banner" style="background-image: url('${bannerUrl}')"></div>
+            <div class="card-banner" onclick="selectCharacter(${char.id})" style="background-image: url('${bannerUrl}')"></div>
             <div class="card-avatar-wrapper">
                 <img src="${avatarUrl}" class="card-avatar" alt="Avatar">
                 <button class="edit-avatar-btn" onclick="editAvatar(event, ${char.id})" title="Editar Foto">✏️</button>
@@ -1239,7 +1241,10 @@ function setupSheetTabs() {
 
 function setupEventListeners() {
     // Clicar no Logo volta para a Home
-    elLogo.addEventListener('click', goHome);
+    if(elLogo) elLogo.addEventListener('click', goHome);
+    
+    // Clicar no botão Voltar também vai pra Home
+    if(elBtnBack) elBtnBack.addEventListener('click', goHome);
     
     // Listener do Input Nível (Para atualizar a biblioteca)
     elLevel.addEventListener('change', (e) => {

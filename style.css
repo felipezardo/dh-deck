@@ -39,6 +39,26 @@ h1, h2, h3, h4 {
    2. COMPONENTES UI (Botões, Inputs, Modais)
    ========================================= */
 /* --- Botões Gerais --- */
+/* --- Botão Voltar (Dentro da Ficha) --- */
+.btn-back {
+  background: transparent;
+  border: none;
+  color: var(--accent-gold);
+  font-size: 1rem;
+  font-family: "Cinzel", serif;
+  font-weight: bold;
+  cursor: pointer;
+  margin-bottom: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.3s, transform 0.3s;
+}
+.btn-back:hover {
+  color: var(--text-main);
+  transform: translateX(-5px); /* Faz o botão dar uma "escorregadinha" pra esquerda indicando a volta */
+}
+
 .btn-primary {
   background: var(--accent-gold);
   color: #000;

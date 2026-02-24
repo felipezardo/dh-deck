@@ -23,7 +23,6 @@ const classDomains = {
     'Warlock': ['Pavor', 'Graça']
 };
 
-// Estatísticas Base (Vida e Evasão por classe)
 const classBaseStats = {
     'Bardo': { evasion: 10, hp: 5 },
     'Druida': { evasion: 10, hp: 6 },
@@ -41,7 +40,6 @@ const classBaseStats = {
     'Warlock': { evasion: 11, hp: 5 }
 };
 
-// NOVO: Cores de cada classe para o degradê do Banner
 const classColors = {
     'Bardo': ['#ae3b7c', '#3364a3'],
     'Druida': ['#17633b', '#623b74'],
@@ -59,7 +57,6 @@ const classColors = {
     'Warlock': ['#4e345b', '#8d3965']
 };
 
-// Textos do PDF Completos
 const classDescriptions = {
     'Bardo': `
         <div class="class-stats-grid">
@@ -312,7 +309,7 @@ Pesada: −1 em Evasão</p>
         </div>
         <div class="ability-block">
             <div class="ability-title">Habilidade de Classe: Sentido Arcano</div>
-            <p>Você pode sentir a presença de objetos e pessoas com magia quando estão Próximos.</p>
+            <p>Você pode sentir a presence de objetos e pessoas com magia quando estão Próximos.</p>
         </div>
         <div class="ability-block">
             <div class="ability-title">Habilidade de Classe: Ilusão Menor</div>
@@ -774,6 +771,10 @@ function createNewCharacter() {
             hopeMarks: [], hpMax: 6, hpMarks: [], stressMax: 6, stressMarks: []
         },
 
+        // ADICIONADO: Experiências e Patamares Vazios
+        experiences: Array(5).fill({ name: '', val: '' }),
+        evolution: { p2: [], p3: [], p4: [] },
+
         // NOVO OBJETO DE EQUIPAMENTO COMPLETO
         equipment: {
             proficiency: 1,
@@ -884,6 +885,24 @@ function selectCharacter(id) {
     char.ancestry = selectedAncestries;
     setupAncestryDropdown(selectedAncestries);
 
+    // Carregar Experiências
+    const expNames = document.querySelectorAll('.exp-name');
+    const expVals = document.querySelectorAll('.exp-val');
+    const exps = char.experiences || Array(5).fill({name: '', val: ''});
+    exps.forEach((exp, i) => {
+        if(expNames[i]) expNames[i].value = exp.name || '';
+        if(expVals[i]) expVals[i].value = exp.val || '';
+    });
+
+    // Carregar Patamares (Evolução)
+    const evo = char.evolution || { p2: [], p3: [], p4: [] };
+    const setChecks = (className, arr) => {
+        document.querySelectorAll('.' + className).forEach((cb, i) => cb.checked = !!arr[i]);
+    };
+    setChecks('p2-check', evo.p2);
+    setChecks('p3-check', evo.p3);
+    setChecks('p4-check', evo.p4);
+
     updateClassDescription(char.class);
     renderOriginCards(char);
     renderDeck();
@@ -964,6 +983,22 @@ function saveCurrentChar() {
         },
         inventory: document.getElementById('equip-inventory').value,
         notes: document.getElementById('equip-notes').value
+    };
+
+    // Salvar Experiências
+    const expNames = document.querySelectorAll('.exp-name');
+    const expVals = document.querySelectorAll('.exp-val');
+    char.experiences = Array.from(expNames).map((el, i) => ({
+        name: el.value,
+        val: expVals[i] ? expVals[i].value : ''
+    }));
+
+    // Salvar Patamares
+    const getChecks = (className) => Array.from(document.querySelectorAll('.' + className)).map(cb => cb.checked);
+    char.evolution = {
+        p2: getChecks('p2-check'),
+        p3: getChecks('p3-check'),
+        p4: getChecks('p4-check')
     };
 
     saveToStorage();
@@ -1279,12 +1314,11 @@ function setupEventListeners() {
         saveCurrentChar();
     });
 
-    // Inputs Gerais (INCLUINDO OS TEXTAREAS)
-    const inputs = document.querySelectorAll('input:not(.custom-checkbox):not(#avatar-upload-input):not(#avatar-url-input), select, textarea');
+    // Inputs Gerais (INCLUINDO OS TEXTAREAS E AGORA EXPERIÊNCIAS/PATAMARES)
+    // Omitimos o char-level para evitar duplicação e os inputs de avatar
+    const inputs = document.querySelectorAll('input:not(#avatar-upload-input):not(#avatar-url-input):not(#char-level), select, textarea');
+    
     inputs.forEach(input => {
-        // Pular o char-level para evitar duplicação de eventos
-        if (input.id === 'char-level') return; 
-        
         input.addEventListener('change', (e) => {
             if (['char-armor-value', 'char-hp-max', 'char-stress-max'].includes(e.target.id)) {
                 saveCurrentChar();

@@ -14,20 +14,20 @@
 <body>
 
     <header class="main-header">
-        <h1 id="logo-home" title="Voltar ao Início">Daggerdeck</h1>
+        <h1 id="logo-home" title="Voltar ao Início">Daggerdeckgi</h1>
     </header>
 
     <main id="app">
-        
+
         <section id="home-view" class="panel">
             <h2 class="section-title">Meus Personagens</h2>
             <div class="cards-grid" id="home-characters-grid">
-                </div>
+            </div>
         </section>
 
         <div id="sheet-view" class="hidden">
             <section id="setup-section" class="panel">
-                
+
                 <button id="btn-back-home" class="btn-back">⬅ Voltar</button>
 
                 <h2 class="section-title">Quem é você?</h2>
@@ -99,20 +99,26 @@
                         <button class="sheet-tab-btn active" data-target="tab-stats">Estatísticas</button>
                         <button class="sheet-tab-btn" data-target="tab-equip">Equipamento</button>
                         <button class="sheet-tab-btn" data-target="tab-deck">Cartas</button>
+                        <button class="sheet-tab-btn" data-target="tab-evolution">Lvl-up</button>
                     </div>
 
                     <div id="tab-stats" class="sheet-tab-content active">
                         <h3 class="section-subtitle">Atributos</h3>
                         <div class="stats-grid">
-                            <div class="stat-card"><label>Agilidade</label><input type="number" id="stat-agility" value="0">
+                            <div class="stat-card"><label>Agilidade</label><input type="number" id="stat-agility"
+                                    value="0">
                             </div>
-                            <div class="stat-card"><label>Força</label><input type="number" id="stat-strength" value="0">
+                            <div class="stat-card"><label>Força</label><input type="number" id="stat-strength"
+                                    value="0">
                             </div>
-                            <div class="stat-card"><label>Acuidade</label><input type="number" id="stat-finesse" value="0">
+                            <div class="stat-card"><label>Acuidade</label><input type="number" id="stat-finesse"
+                                    value="0">
                             </div>
-                            <div class="stat-card"><label>Instinto</label><input type="number" id="stat-instinct" value="0">
+                            <div class="stat-card"><label>Instinto</label><input type="number" id="stat-instinct"
+                                    value="0">
                             </div>
-                            <div class="stat-card"><label>Presença</label><input type="number" id="stat-presence" value="0">
+                            <div class="stat-card"><label>Presença</label><input type="number" id="stat-presence"
+                                    value="0">
                             </div>
                             <div class="stat-card"><label>Conhecimento</label><input type="number" id="stat-knowledge"
                                     value="0"></div>
@@ -180,6 +186,29 @@
                                 </div>
                             </div>
                         </div>
+                        <h3 class="section-subtitle">Experiências</h3>
+                        <div class="experiences-container">
+                            <div class="experience-row">
+                                <input type="text" class="exp-name" placeholder="Comece com duas...">
+                                <input type="number" class="exp-val" placeholder="+2">
+                            </div>
+                            <div class="experience-row">
+                                <input type="text" class="exp-name" placeholder="Comece com duas...">
+                                <input type="number" class="exp-val" placeholder="+2">
+                            </div>
+                            <div class="experience-row">
+                                <input type="text" class="exp-name" >
+                                <input type="number" class="exp-val" placeholder="+2">
+                            </div>
+                            <div class="experience-row">
+                                <input type="text" class="exp-name" >
+                                <input type="number" class="exp-val" placeholder="+2">
+                            </div>
+                            <div class="experience-row">
+                                <input type="text" class="exp-name" >
+                                <input type="number" class="exp-val" placeholder="+2">
+                            </div>
+                        </div>
                     </div>
 
                     <div id="tab-equip" class="sheet-tab-content">
@@ -197,8 +226,10 @@
                                 <div class="equip-row-inputs">
                                     <input type="text" id="equip-p-name" class="equip-input-name"
                                         placeholder="Nome da Arma">
-                                    <input type="text" id="equip-p-attr" class="equip-input-small" placeholder="Atributo">
-                                    <input type="text" id="equip-p-range" class="equip-input-small" placeholder="Alcance">
+                                    <input type="text" id="equip-p-attr" class="equip-input-small"
+                                        placeholder="Atributo">
+                                    <input type="text" id="equip-p-range" class="equip-input-small"
+                                        placeholder="Alcance">
                                     <input type="text" id="equip-p-dmg" class="equip-input-small" placeholder="Dano">
                                 </div>
                                 <div class="equip-row-full">
@@ -211,8 +242,10 @@
                                 <div class="equip-row-inputs">
                                     <input type="text" id="equip-s-name" class="equip-input-name"
                                         placeholder="Nome da Arma">
-                                    <input type="text" id="equip-s-attr" class="equip-input-small" placeholder="Atributo">
-                                    <input type="text" id="equip-s-range" class="equip-input-small" placeholder="Alcance">
+                                    <input type="text" id="equip-s-attr" class="equip-input-small"
+                                        placeholder="Atributo">
+                                    <input type="text" id="equip-s-range" class="equip-input-small"
+                                        placeholder="Alcance">
                                     <input type="text" id="equip-s-dmg" class="equip-input-small" placeholder="Dano">
                                 </div>
                                 <div class="equip-row-full">
@@ -271,13 +304,172 @@
                             </div>
                         </section>
                     </div>
+                    <div id="tab-evolution" class="sheet-tab-content">
+                        <div class="patamares-grid">
+                            <div class="patamar-card">
+                                <h3 class="patamar-title">2º PATAMAR: NÍVEIS 2 A 4</h3>
+                                <div class="patamar-header-text">No nível 2, crie uma nova Experiência com +2 e aumente
+                                    sua Proficiência em +1.</div>
+                                <p class="patamar-instruction">Escolha duas opções da lista abaixo e as marque.</p>
+
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p2-check"><input
+                                            type="checkbox" class="p2-check"></div> <span>Escolha dois atributos
+                                        desmarcados, os marque e receba um bônus de +1 em cada.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p2-check"><input
+                                            type="checkbox" class="p2-check"></div> <span>Aumente seus PV em 1
+                                        permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p2-check"><input
+                                            type="checkbox" class="p2-check"></div> <span>Aumente seus PF em 1
+                                        permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p2-check"></div> <span>Receba
+                                        +1 em duas Experiências permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p2-check"></div> <span>Escolha
+                                        uma nova carta de domínio de um domínio ao qual você tem acesso e de um nível
+                                        igual ou menor que o seu (nível máx.: 4).</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p2-check"></div> <span>Aumente
+                                        sua Evasão em +1 permanentemente.</span>
+                                </label>
+
+                                <p class="patamar-footer">Atualize seu nível e ajuste seus limiares de dano de acordo.
+                                    Escolha uma nova carta de domínio de nível igual ou inferior ao seu e que pertença a
+                                    um domínio ao qual você tem acesso.</p>
+                            </div>
+
+                            <div class="patamar-card">
+                                <h3 class="patamar-title">3º PATAMAR: NÍVEIS 5 A 7</h3>
+                                <div class="patamar-header-text">No nível 5, crie uma nova Experiência com +2 e remova
+                                    todas as marcações nos atributos. Então, aumente sua Proficiência em +1.</div>
+                                <p class="patamar-instruction">Escolha duas opções da lista abaixo, ou qualquer opção do
+                                    patamar anterior, e as marque.</p>
+
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"><input
+                                            type="checkbox" class="p3-check"><input type="checkbox" class="p3-check">
+                                    </div> <span>Escolha dois atributos desmarcados, os marque e receba um bônus de +1
+                                        em cada.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"><input
+                                            type="checkbox" class="p3-check"></div> <span>Aumente seus PV em 1
+                                        permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"><input
+                                            type="checkbox" class="p3-check"></div> <span>Aumente seus PF em 1
+                                        permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"></div> <span>Receba
+                                        +1 em duas Experiências permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"></div> <span>Escolha
+                                        uma nova carta de domínio de um domínio ao qual você tem acesso e de um nível
+                                        igual ou menor que o seu (nível máx.: 7).</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"></div> <span>Aumente
+                                        sua Evasão em +1 permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"></div> <span>Pegue
+                                        sua carta de subclasse aprimorada. Em seguida, corte a opção de multiclasse
+                                        deste patamar.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"><input
+                                            type="checkbox" class="p3-check"></div> <span>Aumente sua Proficiência em
+                                        +1.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p3-check"><input
+                                            type="checkbox" class="p3-check"></div> <span>Multiclasse: escolha uma
+                                        classe adicional para o seu personagem. Em seguida, corte "Pegue uma carta de
+                                        subclasse aprimorada" e a outra opção de multiclasse nesta ficha.</span>
+                                </label>
+
+                                <p class="patamar-footer">Atualize seu nível e ajuste seus limiares de dano de acordo.
+                                    Escolha uma nova carta de domínio de nível igual ou inferior ao seu e que pertença a
+                                    um domínio ao qual você tem acesso.</p>
+                            </div>
+
+                            <div class="patamar-card">
+                                <h3 class="patamar-title">4º PATAMAR: NÍVEIS 8 A 10</h3>
+                                <div class="patamar-header-text">No nível 8, crie uma nova Experiência com +2 e remova
+                                    todas as marcações nos atributos. Então, aumente sua Proficiência em +1.</div>
+                                <p class="patamar-instruction">Escolha duas opções da lista abaixo, ou qualquer opção do
+                                    patamar anterior, e as marque.</p>
+
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"><input
+                                            type="checkbox" class="p4-check"><input type="checkbox" class="p4-check">
+                                    </div> <span>Escolha dois atributos desmarcados, os marque e receba um bônus de +1
+                                        em cada.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"><input
+                                            type="checkbox" class="p4-check"></div> <span>Aumente seus PV em 1
+                                        permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"><input
+                                            type="checkbox" class="p4-check"></div> <span>Aumente seus PF em 1
+                                        permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"></div> <span>Receba
+                                        +1 em duas Experiências permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"></div> <span>Escolha
+                                        uma nova carta de domínio de um domínio ao qual você tem acesso e de um nível
+                                        igual ou menor que o seu (nível máx.: 10).</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"></div> <span>Aumente
+                                        sua Evasão em +1 permanentemente.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"></div> <span>Pegue
+                                        sua carta de subclasse aprimorada. Em seguida, corte a opção de multiclasse
+                                        deste patamar.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"><input
+                                            type="checkbox" class="p4-check"></div> <span>Aumente sua Proficiência em
+                                        +1.</span>
+                                </label>
+                                <label class="adv-option">
+                                    <div class="adv-boxes"><input type="checkbox" class="p4-check"><input
+                                            type="checkbox" class="p4-check"></div> <span>Multiclasse: escolha uma
+                                        classe adicional para o seu personagem. Em seguida, corte "Pegue uma carta de
+                                        subclasse aprimorada" e a outra opção de multiclasse nesta ficha.</span>
+                                </label>
+
+                                <p class="patamar-footer">Atualize seu nível e ajuste seus limiares de dano de acordo.
+                                    Escolha uma nova carta de domínio de nível igual ou inferior ao seu e que pertença a
+                                    um domínio ao qual você tem acesso.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
 
             <div class="danger-zone">
                 <button id="btn-delete-char" class="btn-danger">Excluir Personagem</button>
             </div>
-        </div> 
+        </div>
     </main>
 
     <dialog id="library-modal" class="large-modal">
@@ -308,20 +500,26 @@
     </dialog>
 
     <dialog id="avatar-modal">
-        <div class="modal-content small" style="background: var(--bg-card); border: 1px solid var(--accent-gold); border-radius: 8px;">
-            <div class="modal-header" style="display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #333;">
+        <div class="modal-content small"
+            style="background: var(--bg-card); border: 1px solid var(--accent-gold); border-radius: 8px;">
+            <div class="modal-header"
+                style="display: flex; justify-content: space-between; padding: 15px; border-bottom: 1px solid #333;">
                 <h3 style="margin:0; font-size: 1.2rem;">Editar Imagem</h3>
-                <button class="close-modal-btn" onclick="document.getElementById('avatar-modal').close()" title="Fechar" style="border:none; width: 30px; height: 30px;">✕</button>
+                <button class="close-modal-btn" onclick="document.getElementById('avatar-modal').close()" title="Fechar"
+                    style="border:none; width: 30px; height: 30px;">✕</button>
             </div>
             <div style="padding: 20px; display: flex; flex-direction: column; gap: 15px;">
-                
+
                 <div class="form-group" style="margin-bottom:0;">
                     <label>Fazer Upload do dispositivo</label>
-                    <input type="file" id="avatar-upload-input" accept="image/*" style="padding: 10px; background: #111 !important; color: #fff !important; cursor: pointer;">
+                    <input type="file" id="avatar-upload-input" accept="image/*"
+                        style="padding: 10px; background: #111 !important; color: #fff !important; cursor: pointer;">
                 </div>
 
-                <div style="text-align: center; color: var(--accent-gold); font-weight: bold; font-family: 'Cinzel', serif;">OU</div>
-                
+                <div
+                    style="text-align: center; color: var(--accent-gold); font-weight: bold; font-family: 'Cinzel', serif;">
+                    OU</div>
+
                 <div class="form-group" style="margin-bottom:0;">
                     <label>Inserir Link (URL)</label>
                     <input type="text" id="avatar-url-input" placeholder="https://exemplo.com/foto.png">

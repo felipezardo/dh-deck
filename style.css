@@ -38,7 +38,6 @@ h1, h2, h3, h4 {
 /* =========================================
    2. COMPONENTES UI (Botões, Inputs, Modais)
    ========================================= */
-/* --- Botões Gerais --- */
 /* --- Botão Voltar (Dentro da Ficha) --- */
 .btn-back {
   background: transparent;
@@ -56,7 +55,7 @@ h1, h2, h3, h4 {
 }
 .btn-back:hover {
   color: var(--text-main);
-  transform: translateX(-5px); /* Faz o botão dar uma "escorregadinha" pra esquerda indicando a volta */
+  transform: translateX(-5px);
 }
 
 .btn-primary {
@@ -292,7 +291,6 @@ dialog::backdrop {
 /* =========================================
    3. LAYOUT GERAL (Header, Panel, Tabs)
    ========================================= */
-/* SUBSTITUA O BLOCO .main-header INTEIRO POR ESTE: */
 .main-header {
   background: rgba(0, 0, 0, 0.3);
   padding: 1rem;
@@ -761,7 +759,7 @@ dialog::backdrop {
 }
 
 /* =========================================
-   6. GRIMÓRIO / CARTAS
+   6. GRIMÓRIO / CARTAS / CLASSE
    ========================================= */
 .deck-area {
   background: var(--bg-dark);
@@ -822,6 +820,160 @@ dialog::backdrop {
   font-size: 5rem;
   color: var(--success);
   text-shadow: 0 0 10px #000;
+}
+
+/* --- Carta da Classe (Lida da API) --- */
+/* --- Carta da Classe (Lida da API) --- */
+.class-card {
+  background: var(--bg-card);
+  border: 2px solid var(--accent-gold) !important;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  /* MÁGICA AQUI: Mantém a proporção exata das outras imagens (220x320) */
+  aspect-ratio: 220/320;
+  width: 100%;
+  height: auto;
+  min-height: unset; /* Remove a altura mínima anterior */
+  max-height: unset;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.class-card .class-card-banner {
+  height: 30px; /* Reduzido para caber melhor na nova proporção da carta */
+  background-color: #0a111a;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 2px solid var(--accent-gold);
+  position: relative;
+  flex-shrink: 0;
+}
+.class-card .class-card-icon {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 46px;
+  background: var(--bg-dark);
+  border: 2px solid var(--accent-gold);
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-family: "Cinzel", serif;
+  font-size: 1.3rem;
+  color: var(--accent-gold);
+  z-index: 2;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+.class-card .class-card-header {
+  text-align: center;
+  padding: 10px 10px 10px 10px;
+  background: var(--bg-dark);
+  border-bottom: 1px solid #333;
+  flex-shrink: 0;
+}
+.class-card .class-card-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.class-card .class-card-header .class-base-stats {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 8px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.class-card .class-card-header .class-base-stats span {
+  background: #111;
+  padding: 3px 6px;
+  border-radius: 4px;
+  border: 1px solid #333;
+}
+.class-card .class-card-header .class-base-stats span strong {
+  color: var(--accent-gold);
+  margin-left: 3px;
+}
+.class-card .class-card-body {
+  flex: 1;
+  overflow-y: auto; /* Barra de rolagem interna ativa */
+  /* Padding mais apertado nas laterais para aproveitar o espaço */
+  padding: 10px 12px;
+  font-size: 0.78rem; /* Fonte ligeiramente menor para caber mais texto */
+  line-height: 1.35; /* Entrelinha mais justa, estilo bloco de texto */
+  color: var(--text-main);
+  background: var(--bg-card);
+  /* Texto justificado dá a aparência de bloco impresso de carta */
+  text-align: justify;
+  /* Estilizando o scrollbar para ser fino e discreto */
+}
+.class-card .class-card-body::-webkit-scrollbar {
+  width: 4px;
+}
+.class-card .class-card-body::-webkit-scrollbar-thumb {
+  background: var(--accent-gold);
+  border-radius: 2px;
+}
+.class-card .class-card-body::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+.class-card .class-card-body {
+  /* --- REGRAS PARA O CONTEÚDO VINDO DA API --- */
+  /* Títulos de seção dentro do texto (ex: CARACTERÍSTICAS) */
+}
+.class-card .class-card-body h3, .class-card .class-card-body h4 {
+  color: var(--accent-gold);
+  font-family: "Cinzel", serif;
+  font-size: 0.85rem;
+  text-align: center;
+  text-transform: uppercase;
+  margin: 12px 0 4px 0;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  padding-bottom: 2px;
+}
+.class-card .class-card-body {
+  /* Linhas horizontais que podem vir da API */
+}
+.class-card .class-card-body hr {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin: 8px 0;
+}
+.class-card .class-card-body {
+  /* Parágrafos - Margens bem justas */
+}
+.class-card .class-card-body p {
+  margin-bottom: 6px; /* Reduzido para ficar compacto */
+  margin-top: 0;
+}
+.class-card .class-card-body {
+  /* Títulos de Habilidades (geralmente em negrito na API) */
+}
+.class-card .class-card-body strong, .class-card .class-card-body b, .class-card .class-card-body .ability-title {
+  color: var(--accent-gold);
+  font-family: "Cinzel", serif;
+  font-weight: bold;
+  font-size: 0.8rem;
+}
+.class-card .class-card-body {
+  /* Listas - O GRANDE VILÃO DO ESPAÇO */
+  /* Reduz drasticamente o recuo e as margens das listas */
+}
+.class-card .class-card-body ul, .class-card .class-card-body ol {
+  margin: 4px 0 8px 15px; /* Margem esquerda de apenas 15px */
+  padding: 0;
+}
+.class-card .class-card-body {
+  /* Itens de lista bem colados */
+}
+.class-card .class-card-body li {
+  margin-bottom: 2px;
+  padding-left: 0;
 }
 
 .card-actions {
@@ -990,7 +1142,7 @@ input[type=number]::-webkit-inner-spin-button {
   border-radius: 50%;
   width: 28px;
   height: 28px;
-  color: #000; /* Define a cor base do SVG */
+  color: #000;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -1072,6 +1224,13 @@ input[type=number]::-webkit-inner-spin-button {
    9. EXPERIÊNCIAS & EVOLUÇÃO (Com Scroll Mobile)
    ========================================= */
 /* Experiências */
+.experiences-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
 .experience-row {
   display: flex;
   align-items: center;
@@ -1086,7 +1245,7 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .experience-row .exp-name {
   flex: 1;
-  min-width: 0; /* O SEGREDO AQUI: Permite que o texto encolha no mobile sem vazar a tela */
+  min-width: 0;
   background: transparent !important;
   border: none !important;
   font-family: "Cinzel", serif;
@@ -1100,13 +1259,13 @@ input[type=number]::-webkit-inner-spin-button {
 }
 .experience-row .exp-val {
   width: 50px !important;
-  min-width: 50px !important; /* Trava a largura do número */
+  min-width: 50px !important;
   text-align: center;
   font-weight: bold;
   color: var(--accent-gold) !important;
   font-size: 1.2rem;
   padding: 5px !important;
-  background: rgba(0, 0, 0, 0.3) !important; /* Tira o fundo branco e deixa dark */
+  background: rgba(0, 0, 0, 0.3) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 4px;
 }
@@ -1118,12 +1277,11 @@ input[type=number]::-webkit-inner-spin-button {
 
 /* Evolução (Patamares) - Carrossel Mobile */
 .patamares-grid {
-  display: flex; /* Mudamos de grid para flex no mobile */
-  overflow-x: auto; /* Permite arrastar horizontalmente */
-  scroll-snap-type: x mandatory; /* Faz o card travar no centro */
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
   gap: 20px;
-  padding-bottom: 15px; /* Espaço para a barra de rolagem */
-  /* Estilizando a barra de rolagem (opcional) */
+  padding-bottom: 15px;
 }
 .patamares-grid::-webkit-scrollbar {
   height: 8px;
@@ -1138,8 +1296,8 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .patamar-card {
-  scroll-snap-align: center; /* Trava o scroll aqui */
-  flex: 0 0 90%; /* O card ocupa 90% da tela no celular */
+  scroll-snap-align: center;
+  flex: 0 0 90%;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -1225,7 +1383,7 @@ input[type=number]::-webkit-inner-spin-button {
   .patamares-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    overflow-x: visible; /* Tira o scroll */
+    overflow-x: visible;
   }
   .patamar-card {
     flex: auto;

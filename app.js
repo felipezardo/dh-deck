@@ -78,7 +78,6 @@ const elAncestryDisplay = document.getElementById('ancestry-display');
 const elAncestryOptions = document.getElementById('ancestry-options');
 const elCommunity = document.getElementById('char-community');
 const elTransformation = document.getElementById('char-transformation');
-const elDescription = document.getElementById('class-description-box');
 
 // Novas Referências para a Home e Nível
 const elHomeView = document.getElementById('home-view');
@@ -125,12 +124,16 @@ function goHome() {
 function renderHome() {
     elHomeGrid.innerHTML = '';
     
+    // Ícones SVG
     const trashSvg = `<svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>`;
     const editSvg = `<svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>`;
 
     characters.forEach(char => {
         const className = char.class || 'Classe Indefinida';
+        // Se tiver foto, usa. Se não, gera um avatar genérico bonito com as iniciais
         const avatarUrl = char.avatar || `https://placehold.co/150x150/1a2639/d4af37?text=${encodeURIComponent(char.name ? char.name.charAt(0).toUpperCase() : '?')}`;
+        
+        // Pega as cores da classe para o degradê (se não achar, usa um cinza padrão)
         const colors = classColors[char.class] || ['#333', '#111'];
         const bannerGradient = `background: linear-gradient(135deg, ${colors[0]} 45%, ${colors[1]} 100%);`;
 
@@ -159,6 +162,7 @@ function renderHome() {
     elHomeGrid.appendChild(addCard);
 }
 
+// NOVO: Abre o Modal de Avatar
 function editAvatar(e, id) {
     e.stopPropagation(); 
     editingAvatarCharId = id;
@@ -325,7 +329,6 @@ function selectCharacter(id) {
     setChecks('p3-check', evo.p3);
     setChecks('p4-check', evo.p4);
 
-    updateClassDescription(char.class);
     renderOriginCards(char);
     renderDeck();
 }
@@ -435,17 +438,6 @@ function renderResourceSlots(containerId, count, marksArray = []) {
     }
 }
 
-// NOVO: A função agora busca a descrição da API (fullData) ao invés do objeto local
-function updateClassDescription(className) {
-    if (!className || !fullData.DescricoesDeClasse || !fullData.DescricoesDeClasse[className]) {
-        elDescription.classList.add('hidden');
-        elDescription.innerHTML = '';
-        return;
-    }
-    elDescription.innerHTML = fullData.DescricoesDeClasse[className];
-    elDescription.classList.remove('hidden');
-}
-
 function setupSubclassDropdown(className, selectedValues = []) {
     elDropdownOptions.innerHTML = ''; 
     if (!className) {
@@ -487,6 +479,7 @@ function updateSubclassDisplay(selectedValues) {
     elDropdownDisplay.innerText = displayNames.join(', ');
 }
 
+// Lógica Ancestralidade Dropdown
 function setupAncestryDropdown(selectedValues = []) {
     elAncestryOptions.innerHTML = ''; 
     if (fullData.Ancestralidades) {
@@ -562,9 +555,13 @@ if (elAncestryDisplay) {
     });
 }
 
+
+// --- REFATORADO: Renderiza as cartas em ordem cronológica inversa (mais recente primeiro) ---
 function renderOriginCards(char) {
     const container = document.getElementById('origin-cards-container');
     container.innerHTML = '';
+
+    // Função auxiliar para renderizar cartas padronizadas (Comunidade, Ancestralidade, etc)
     const addStaticCard = (category, itemName) => {
         if (!itemName || !fullData[category]) return;
         const item = fullData[category].find(i => i.nome === itemName);
@@ -575,15 +572,63 @@ function renderOriginCards(char) {
             container.appendChild(div);
         }
     };
-    
-    addStaticCard('Comunidades', char.community);
-    
-    let ancestries = Array.isArray(char.ancestry) ? char.ancestry : (char.ancestry ? [char.ancestry] : []);
+
+    // 1. Comunidade
+    if (char.community) addStaticCard('Comunidades', char.community);
+
+    // 2. Ancestralidade (também invertida para que se ele escolher 2, a 2ª seja a primeira)
+    let ancestries = Array.isArray(char.ancestry) ? [...char.ancestry].reverse() : (char.ancestry ? [char.ancestry] : []);
     ancestries.forEach(anc => addStaticCard('Ancestralidades', anc));
-    
+
+    // 3. Transformação
     if (char.transformation) addStaticCard('Transformacoes', char.transformation);
-    let subs = Array.isArray(char.subclass) ? char.subclass : (char.subclass ? [char.subclass] : []);
+
+    // 4. Sub-Classes (invertidas também)
+    let subs = Array.isArray(char.subclass) ? [...char.subclass].reverse() : (char.subclass ? [char.subclass] : []);
     subs.forEach(subName => addStaticCard('Sub-Classes', subName));
+
+    // 5. Por último na exibição, a Carta da Classe (construída dinamicamente via HTML)
+    if (char.class && fullData.DescricoesDeClasse && fullData.DescricoesDeClasse[char.class]) {
+        const rawHtml = fullData.DescricoesDeClasse[char.class];
+        const colors = classColors[char.class] || ['#333', '#111'];
+        const bannerGradient = `background: linear-gradient(135deg, ${colors[0]} 45%, ${colors[1]} 100%);`;
+        const stats = classBaseStats[char.class] || { evasion: '?', hp: '?' };
+        const classIconLetter = char.class.charAt(0).toUpperCase();
+        
+        // --- LIMPEZA AVANÇADA DO HTML DA CLASSE ---
+        // O HTML da API gera divs individuais como <div class="ability-block">.
+        // Vamos extrair APENAS as divs que contêm as habilidades e ignorar o grid de status.
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = rawHtml;
+        
+        // Remove explicitamente a classe de stats se ela existir no HTML
+        const statsGrid = tempDiv.querySelector('.class-stats-grid');
+        if (statsGrid) statsGrid.remove();
+        
+        // Pega o HTML restante que deve conter apenas os blocos de habilidade
+        let cleanedHtmlBody = tempDiv.innerHTML;
+        // -------------------------------------------
+
+        const classCard = document.createElement('div');
+        classCard.className = 'rpg-card class-card'; 
+        
+        classCard.innerHTML = `
+            <div class="class-card-banner" style="${bannerGradient}">
+                <div class="class-card-icon">${classIconLetter}</div>
+            </div>
+            <div class="class-card-header">
+                <h3>${char.class}</h3>
+                <div class="class-base-stats">
+                    <span>Evasão <strong>${stats.evasion}</strong></span>
+                    <span>Vida <strong>${stats.hp}</strong></span>
+                </div>
+            </div>
+            <div class="class-card-body">
+                ${cleanedHtmlBody}
+            </div>
+        `;
+        container.appendChild(classCard);
+    }
 }
 
 function saveToStorage() {
@@ -721,7 +766,6 @@ function setupEventListeners() {
     });
 
     // Inputs Gerais (INCLUINDO OS TEXTAREAS E AGORA EXPERIÊNCIAS/PATAMARES)
-    // Omitimos o char-level para evitar duplicação e os inputs de avatar
     const inputs = document.querySelectorAll('input:not(#avatar-upload-input):not(#avatar-url-input):not(#char-level), select, textarea');
     
     inputs.forEach(input => {
@@ -744,7 +788,7 @@ function setupEventListeners() {
             selectCharacter(activeCharId);
         }
         setupSubclassDropdown(className, []);
-        updateClassDescription(className);
+        // updateClassDescription foi removida pois o renderOriginCards resolve tudo.
     });
 
     document.getElementById('btn-delete-char').addEventListener('click', () => document.getElementById('confirm-modal').showModal());
@@ -754,7 +798,7 @@ function setupEventListeners() {
         saveToStorage();
         document.getElementById('confirm-modal').close();
         
-        // Se excluiu a ficha estando nela, volta pra home. Se estava na home, só recarrega a home.
+        // Se excluiu a ficha estando nela, volta pra home.
         if (!elSheetView.classList.contains('hidden')) {
             goHome(); 
         } else {
@@ -778,17 +822,15 @@ function setupEventListeners() {
         const fileInput = document.getElementById('avatar-upload-input');
         const urlInput = document.getElementById('avatar-url-input');
 
-        // Se o usuário selecionou um arquivo local
         if (fileInput.files && fileInput.files[0]) {
             const file = fileInput.files[0];
             const reader = new FileReader();
 
             reader.onload = function(event) {
-                // REDIMENSIONANDO A IMAGEM PARA NÃO EXPLODIR O LOCALSTORAGE
                 const img = new Image();
                 img.onload = function() {
                     const canvas = document.createElement('canvas');
-                    const MAX_SIZE = 250; // Tamanho máximo da imagem
+                    const MAX_SIZE = 250; 
                     let width = img.width;
                     let height = img.height;
 
@@ -808,7 +850,6 @@ function setupEventListeners() {
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
                     
-                    // Salva como uma imagem compactada no objeto char
                     char.avatar = canvas.toDataURL('image/jpeg', 0.8);
                     
                     saveToStorage();
@@ -818,16 +859,12 @@ function setupEventListeners() {
                 img.src = event.target.result;
             };
             reader.readAsDataURL(file);
-        } 
-        // Se ele não enviou arquivo, mas digitou a URL
-        else if (urlInput.value.trim() !== "") {
+        } else if (urlInput.value.trim() !== "") {
             char.avatar = urlInput.value.trim();
             saveToStorage();
             renderHome();
             document.getElementById('avatar-modal').close();
-        } 
-        // Se ele clicou em salvar sem preencher nada
-        else {
+        } else {
             alert("Por favor, selecione uma imagem do seu dispositivo ou insira um link URL.");
         }
     });
